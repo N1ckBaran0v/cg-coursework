@@ -8,8 +8,7 @@ public class DrawCommand extends Command {
     }
 
     @Override
-    public void execute() {
-        super.execute();
+    void execute() {
         var artist = context.getArtist();
         artist.draw(cameraName);
     }

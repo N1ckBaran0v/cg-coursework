@@ -14,8 +14,7 @@ public class RotateCommand extends Command {
     }
 
     @Override
-    public void execute() {
-        super.execute();
+    void execute() {
         var scene = context.getScene();
         var object = scene.getObject(name);
         var matrix = Matrix4D.getRotateMatrix(cx, cy, cz);

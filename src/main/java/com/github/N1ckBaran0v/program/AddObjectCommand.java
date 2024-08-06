@@ -10,8 +10,7 @@ public class AddObjectCommand extends Command {
     }
 
     @Override
-    public void execute() {
-        super.execute();
+    void execute() {
         var scene = context.getScene();
         var object = scene.createObject(type);
         scene.addObject(name, object);
