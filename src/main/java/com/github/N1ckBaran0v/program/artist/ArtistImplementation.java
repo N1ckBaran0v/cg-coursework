@@ -16,7 +16,6 @@ public class ArtistImplementation implements Artist {
     }
 
     @Override
-    public void draw() {
-
+    public void draw(String cameraName) {
     }
 }

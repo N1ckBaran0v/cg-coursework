@@ -1,5 +1,6 @@
 package com.github.N1ckBaran0v.program.scene;
 
+import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -7,6 +8,10 @@ import java.util.Map;
 class SceneImplementation implements Scene {
     private final Map<String, SceneObject> objects = new HashMap<>();
     private final SceneObjectSolution solution = new SceneObjectSolution();
+
+    @Inject
+    public SceneImplementation() {
+    }
 
     @Override
     public void addObject(String name, SceneObject sceneObject) {
