@@ -1,7 +1,8 @@
 package com.github.N1ckBaran0v.program.guiAdapters;
 
-import com.github.N1ckBaran0v.program.geometry.Color;
-
 public interface AbstractImage {
-    void setPixel(Color color);
+    int getWidth();
+    int getHeight();
+    void setPixel(int i, int j, int color);
+    int getPixel(int i, int j);
 }
