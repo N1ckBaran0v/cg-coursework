@@ -11,7 +11,11 @@ public class Facade {
 
     public static void execute(Command command) {
         command.setContext(contextHolder.getContext());
-        command.execute();
+        try {
+            command.execute();
+        } finally {
+            command.setContext(null);
+        }
     }
 
     public static void setDrawFactory(AbstractDrawFactory drawFactory) {
