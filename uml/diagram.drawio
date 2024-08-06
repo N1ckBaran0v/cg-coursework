@@ -176,10 +176,10 @@
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="husCv3Gv7-NJlo7RjFrR-35" value="SceneObjectVisitor" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
-          <mxGeometry x="910" y="700" width="180" height="90" as="geometry" />
+          <mxGeometry x="910" y="700" width="180" height="70" as="geometry" />
         </mxCell>
         <mxCell id="husCv3Gv7-NJlo7RjFrR-36" value="&lt;div&gt;&lt;div&gt;+ visit(Camera)&lt;/div&gt;&lt;/div&gt;&lt;div&gt;+ visit(PolygonalModel)&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="husCv3Gv7-NJlo7RjFrR-35">
-          <mxGeometry y="26" width="180" height="64" as="geometry" />
+          <mxGeometry y="26" width="180" height="44" as="geometry" />
         </mxCell>
         <mxCell id="husCv3Gv7-NJlo7RjFrR-37" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;startSize=10;endArrow=openThin;endFill=0;endSize=10;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="husCv3Gv7-NJlo7RjFrR-25" target="husCv3Gv7-NJlo7RjFrR-35">
           <mxGeometry relative="1" as="geometry" />
@@ -295,6 +295,15 @@
               <mxPoint x="91" y="540" />
             </Array>
           </mxGeometry>
+        </mxCell>
+        <mxCell id="husCv3Gv7-NJlo7RjFrR-71" value="TransformVisitor" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="910" y="820" width="180" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="husCv3Gv7-NJlo7RjFrR-72" value="&lt;div&gt;&lt;div&gt;+ visit(Camera)&lt;/div&gt;&lt;/div&gt;&lt;div&gt;+ visit(PolygonalModel)&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="husCv3Gv7-NJlo7RjFrR-71">
+          <mxGeometry y="26" width="180" height="44" as="geometry" />
+        </mxCell>
+        <mxCell id="husCv3Gv7-NJlo7RjFrR-73" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;entryPerimeter=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;startArrow=none;startFill=0;startSize=10;endArrow=block;endFill=0;endSize=10;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="husCv3Gv7-NJlo7RjFrR-71" target="husCv3Gv7-NJlo7RjFrR-36">
+          <mxGeometry relative="1" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
