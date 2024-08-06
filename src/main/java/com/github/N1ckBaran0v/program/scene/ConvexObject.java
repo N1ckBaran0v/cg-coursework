@@ -4,11 +4,18 @@ import com.github.N1ckBaran0v.program.geometry.Dot4D;
 import com.github.N1ckBaran0v.program.geometry.Matrix4D;
 import com.github.N1ckBaran0v.program.geometry.Polygon4D;
 import com.github.N1ckBaran0v.program.geometry.Vector4D;
+
 import java.util.*;
 
 public class ConvexObject extends PolygonalModel {
-    private final List<Polygon4D> polygons = new ArrayList<>();
-    private final Set<Dot4D> dots = new HashSet<>();
+    private final List<Polygon4D> polygons;
+    private final Set<Dot4D> dots;
+
+    public ConvexObject(Dot4D center, List<Polygon4D> polygons, Set<Dot4D> dots) {
+        super(center);
+        this.polygons = polygons;
+        this.dots = dots;
+    }
 
     @Override
     public void transform(Matrix4D transformMatrix) {

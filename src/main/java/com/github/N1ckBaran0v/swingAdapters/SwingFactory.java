@@ -3,6 +3,7 @@ package com.github.N1ckBaran0v.swingAdapters;
 import com.github.N1ckBaran0v.program.guiAdapters.AbstractDrawFactory;
 import com.github.N1ckBaran0v.program.guiAdapters.AbstractGraphics;
 import com.github.N1ckBaran0v.program.guiAdapters.AbstractImage;
+
 import javax.swing.*;
 import java.util.HashMap;
 import java.util.Map;

@@ -1,6 +1,7 @@
 package com.github.N1ckBaran0v.swingAdapters;
 
 import com.github.N1ckBaran0v.program.guiAdapters.AbstractImage;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
