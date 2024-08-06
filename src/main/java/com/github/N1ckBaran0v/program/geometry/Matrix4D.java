@@ -1,7 +1,7 @@
 package com.github.N1ckBaran0v.program.geometry;
 
 public class Matrix4D {
-    private final double[][] matrix;
+    public final double[][] matrix;
 
     public Matrix4D() {
         matrix = createMatrix();

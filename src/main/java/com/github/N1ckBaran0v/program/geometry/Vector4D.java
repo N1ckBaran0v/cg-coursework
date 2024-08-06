@@ -19,4 +19,11 @@ public class Vector4D {
         this.z = end.z - start.z;
         this.w = 1;
     }
+
+    public Vector4D(Dot4D end) {
+        this.x = end.x;
+        this.y = end.y;
+        this.z = end.z;
+        this.w = 1;
+    }
 }
