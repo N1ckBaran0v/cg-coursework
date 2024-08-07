@@ -13,6 +13,13 @@ public class Vector4D {
         this.w = 1;
     }
 
+    public Vector4D(Vector4D other) {
+        this.x = other.x;
+        this.y = other.y;
+        this.z = other.z;
+        this.w = other.w;
+    }
+
     public Vector4D(Dot4D start, Dot4D end) {
         this.x = end.x - start.x;
         this.y = end.y - start.y;
