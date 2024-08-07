@@ -1,54 +1,45 @@
 package com.github.N1ckBaran0v.program.geometry;
 
 public class Color {
-    private int argb;
+    private final int r;
+    private final int g;
+    private final int b;
+    private int alpha;
     private float brightness;
     private static final int MIN_VAL = 0;
     private static final int MAX_VAL = 255;
     private static final float MIN_BRIGHTNESS = 0;
-    private static final float MAX_BRIGHTNESS = 255;
+    private static final float MAX_BRIGHTNESS = 1;
 
     public Color() {
-        this.argb = ~MIN_VAL;
+        this.r = MAX_VAL;
+        this.g = MAX_VAL;
+        this.b = MAX_VAL;
+        this.alpha = MAX_VAL;
         this.brightness = MAX_BRIGHTNESS;
     }
 
     public Color(Color other) {
-        this.argb = other.argb;
-        this.brightness = other.brightness;
+        this(other.r, other.g, other.b, other.alpha, other.brightness)
     }
 
     public Color(int r, int g, int b) {
-        r = checkParam(r);
-        g = checkParam(g);
-        b = checkParam(b);
-        this.argb = MAX_VAL << 24 | r << 16 | g << 8 | b;
-        this.brightness = 1f;
+        this(r, g, b, MAX_VAL, MAX_BRIGHTNESS);
     }
 
     public Color(int r, int g, int b, float brightness) {
-        r = checkParam(r);
-        g = checkParam(g);
-        b = checkParam(b);
-        this.argb = MAX_VAL << 24 | r << 16 | g << 8 | b;
-        setBrightness(brightness);
+        this(r, g, b, MAX_VAL, brightness);
     }
 
     public Color(int r, int g, int b, int alpha) {
-        r = checkParam(r);
-        g = checkParam(g);
-        b = checkParam(b);
-        alpha = checkParam(alpha);
-        this.argb = alpha << 24 | r << 16 | g << 8 | b;
-        this.brightness = 1f;
+        this(r, g, b, alpha, MAX_BRIGHTNESS);
     }
 
     public Color(int r, int g, int b, int alpha, float brightness) {
-        r = checkParam(r);
-        g = checkParam(g);
-        b = checkParam(b);
-        alpha = checkParam(alpha);
-        this.argb = alpha << 24 | r << 16 | g << 8 | b;
+        this.r = checkParam(r);
+        this.g = checkParam(g);
+        this.b = checkParam(b);
+        this.alpha = checkParam(alpha);
         setBrightness(brightness);
     }
 
@@ -72,7 +63,7 @@ public class Color {
     }
 
     public int getRGB() {
-        return argb;
+        return alpha << 24 | r << 16 | g << 8 | b;
     }
 
     public float getBrightness() {
@@ -80,16 +71,15 @@ public class Color {
     }
 
     private void setAlpha(int alpha) {
-        alpha = checkParam(alpha);
-        argb = alpha << 24 | (argb & 0xffffff);
+        this.alpha = checkParam(alpha);
     }
 
     public int mix(int other) {
-        var opacity = (double) ((argb >> 24) & 0xff) / MAX_VAL;
+        var opacity = (double) alpha / MAX_VAL;
         var transparency = 1 - opacity;
-        var r0 = (int) (((argb >> 16) & 0xff) * brightness * opacity);
-        var g0 = (int) (((argb >> 8) & 0xff) * brightness * opacity);
-        var b0 = (int) ((argb & 0xff) * brightness * opacity);
+        var r0 = (int) (r * brightness * opacity);
+        var g0 = (int) (g * brightness * opacity);
+        var b0 = (int) (b * brightness * opacity);
         var r1 = (int) (((other >> 16) & 0xff) * transparency);
         var g1 = (int) (((other >> 8) & 0xff) * transparency);
         var b1 = (int) ((other & 0xff) * transparency);
