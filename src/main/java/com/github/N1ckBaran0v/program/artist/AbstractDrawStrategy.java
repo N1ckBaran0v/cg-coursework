@@ -1,10 +1,8 @@
 package com.github.N1ckBaran0v.program.artist;
 
-import com.github.N1ckBaran0v.program.geometry.Polygon3D;
-import com.github.N1ckBaran0v.program.guiAdapters.AbstractImage;
-
-import java.util.List;
+import com.github.N1ckBaran0v.program.geometry.Color;
+import com.github.N1ckBaran0v.program.geometry.Dot3D;
 
 public interface AbstractDrawStrategy {
-    void draw(List<Polygon3D> polygon3DList);
+    void draw(Dot3D d1, Dot3D d2, Dot3D d3, Color color);
 }

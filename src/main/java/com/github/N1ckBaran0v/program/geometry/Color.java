@@ -20,7 +20,7 @@ public class Color {
     }
 
     public Color(Color other) {
-        this(other.r, other.g, other.b, other.alpha, other.brightness)
+        this(other.r, other.g, other.b, other.alpha, other.brightness);
     }
 
     public Color(int r, int g, int b) {

@@ -10,4 +10,7 @@ public interface ArtistModule {
     @Binds
     @Singleton
     Artist bindArtist(ArtistImplementation artistImplementation);
+
+    @Binds
+    DrawStrategyCreator bindDrawStrategyCreator(ZBufferStrategyCreator zBufferStrategyCreator);
 }

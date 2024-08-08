@@ -1,31 +1,23 @@
 package com.github.N1ckBaran0v.program.artist;
 
 import com.github.N1ckBaran0v.program.geometry.Color;
-import com.github.N1ckBaran0v.program.geometry.Polygon3D;
+import com.github.N1ckBaran0v.program.geometry.Dot3D;
 import com.github.N1ckBaran0v.program.guiAdapters.AbstractImage;
 
-import java.util.List;
-
-public class ZBufferSimpleStrategy implements AbstractDrawStrategy {
+public class ZBufferStrategy implements AbstractDrawStrategy {
     private final AbstractImage image;
+    private final double[][] buffer;
     private final double xmin, ymin, xmax, ymax;
 
-    public ZBufferSimpleStrategy(AbstractImage image) {
+    public ZBufferStrategy(AbstractImage image) {
         this.image = image;
+        buffer = createZBuffer(image);
         var width = image.getWidth();
         var height = image.getHeight();
         xmin = -width / 2;
         xmax = xmin + width;
         ymax = height / 2;
         ymin = ymax - height;
-    }
-
-    @Override
-    public void draw(List<Polygon3D> polygon3DList) {
-        var buffer = createZBuffer(image);
-        for (var polygon : polygon3DList) {
-            fill(polygon, image, buffer);
-        }
     }
 
     private double[][] createZBuffer(AbstractImage image) {
@@ -45,10 +37,8 @@ public class ZBufferSimpleStrategy implements AbstractDrawStrategy {
         return buffer;
     }
 
-    private void fill(Polygon3D polygon, AbstractImage image, double[][] buffer) {
-        var d1 = polygon.first;
-        var d2 = polygon.second;
-        var d3 = polygon.third;
+    @Override
+    public void draw(Dot3D d1, Dot3D d2, Dot3D d3, Color color) {
         var x0 = Math.max(xmin, Math.floor(Math.min(d1.x, Math.min(d2.x, d3.x))));
         var x1 = Math.min(xmax, Math.ceil(Math.max(d1.x, Math.max(d2.x, d3.x))));
         var y0 = Math.max(ymin, Math.floor(Math.min(d1.y, Math.min(d2.y, d3.y))));
@@ -66,7 +56,7 @@ public class ZBufferSimpleStrategy implements AbstractDrawStrategy {
                     var z = (d1.z * k1 + d2.z * k2 + d3.z * k3) / divider;
                     if (buffer[i][j] > z) {
                         buffer[i][j] = z;
-                        image.setPixel(i, j, polygon.color.mix(image.getPixel(i, j)));
+                        image.setPixel(i, j, color.mix(image.getPixel(i, j)));
                     }
                 }
             }

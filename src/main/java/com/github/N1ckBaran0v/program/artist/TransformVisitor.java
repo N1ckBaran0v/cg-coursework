@@ -3,6 +3,7 @@ package com.github.N1ckBaran0v.program.artist;
 import com.github.N1ckBaran0v.program.containers.HashMap2D;
 import com.github.N1ckBaran0v.program.containers.Map2D;
 import com.github.N1ckBaran0v.program.geometry.*;
+import com.github.N1ckBaran0v.program.guiAdapters.AbstractImage;
 import com.github.N1ckBaran0v.program.scene.Camera;
 import com.github.N1ckBaran0v.program.scene.PolygonalModel;
 import com.github.N1ckBaran0v.program.scene.SceneObjectVisitor;
@@ -13,9 +14,9 @@ import java.util.List;
 import java.util.Map;
 
 class TransformVisitor implements SceneObjectVisitor {
-    private final List<Polygon3D> polygons = new ArrayList<>();
     private final Matrix4D transformMatrix;
     private final Dot4D center;
+    private final AbstractDrawStrategy drawStrategy;
     private final Map<Dot4D, Dot4D> transformed = new HashMap<>();
     private final Map<Dot4D, Dot3D> formatted = new HashMap<>();
     private final Map2D<Dot4D, Dot4D> intersection = new HashMap2D<>();
@@ -23,9 +24,10 @@ class TransformVisitor implements SceneObjectVisitor {
     private final List<Dot4D> maybeVisible = new ArrayList<>();
     private final List<Dot3D> dotList = new ArrayList<>();
 
-    public TransformVisitor(Camera camera) {
+    public TransformVisitor(Camera camera, AbstractImage image, DrawStrategyCreator drawStrategyCreator) {
         transformMatrix = camera.getTransformMatrix();
         center = camera.getCenter();
+        drawStrategy = drawStrategyCreator.create(image);
     }
 
     @Override
@@ -84,12 +86,8 @@ class TransformVisitor implements SceneObjectVisitor {
         var second = polygon.get(1);
         for (var i = 2; i < polygon.size(); ++i) {
             var third = polygon.get(i);
-            polygons.add(new Polygon3D(first, second, third, color));
+            drawStrategy.draw(first, second, third, color);
             second = third;
         }
-    }
-
-    public List<Polygon3D> getPolygons() {
-        return polygons;
     }
 }
