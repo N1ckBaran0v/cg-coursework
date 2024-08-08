@@ -26,5 +26,7 @@ public class ArtistImplementation implements Artist {
         for (var object : scene) {
             object.accept(visitor);
         }
+        var graphics = abstractDrawFactory.getGraphics(cameraName);
+        graphics.draw(image);
     }
 }

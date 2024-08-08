@@ -32,8 +32,11 @@ class TransformVisitor implements SceneObjectVisitor {
 
     @Override
     public void visit(PolygonalModel polygonalModel) {
+//        System.out.println("Start to model:");
         for (var polygon : polygonalModel) {
+//            System.out.println("Start polygon");
             for (var elem : polygon) {
+//                System.out.println("Before: " + elem.x + " " + elem.y + " " + elem.z + " " + elem.w);
                 var dot = transformed.get(elem);
                 if (dot == null) {
                     var vec = new Vector4D(center, elem);
@@ -41,7 +44,8 @@ class TransformVisitor implements SceneObjectVisitor {
                     dot = new Dot4D(vec);
                     transformed.put(elem, dot);
                 }
-                if (dot.x >= 0) {
+//                System.out.println("After: " + dot.x + " " + dot.y + " " + dot.z + " " + dot.w);
+                if (dot.z >= 0) {
                     maybeVisible.add(dot);
                 } else {
                     invalid.add(dot);
@@ -49,8 +53,8 @@ class TransformVisitor implements SceneObjectVisitor {
             }
             var len = maybeVisible.size();
             for (var incorrect : invalid) {
-                for (var dot : maybeVisible) {
-                    maybeVisible.add(len, findDot(incorrect, dot));
+                for (var i = 0; i < len; ++i) {
+                    maybeVisible.add(len, findDot(incorrect, maybeVisible.get(i)));
                 }
             }
             for (var dot : maybeVisible) {
@@ -66,12 +70,13 @@ class TransformVisitor implements SceneObjectVisitor {
             maybeVisible.clear();
             dotList.clear();
         }
+        System.out.println("\n\n\n");
     }
 
     private Dot4D findDot(Dot4D a, Dot4D b) {
         var result = intersection.get(a, b);
         if (result == null) {
-            var t = a.x / (a.x - b.x);
+            var t = a.z / (a.z - b.z);
             result = new Dot4D(a.x + (b.x - a.x) * t, a.y + (b.y - a.y) * t, 0);
             intersection.put(a, b, result);
         }
@@ -86,7 +91,14 @@ class TransformVisitor implements SceneObjectVisitor {
         var second = polygon.get(1);
         for (var i = 2; i < polygon.size(); ++i) {
             var third = polygon.get(i);
+//            System.out.print("DrawPolygon: ");
+//            System.out.print("(" + first.x + ", " + first.y + ", " + first.z + "), ");
+//            System.out.print("(" + second.x + ", " + second.y + ", " + second.z + "), ");
+//            System.out.print("(" + third.x + ", " + third.y + ", " + third.z + "), ");
+//            System.out.println(color);
+//            System.out.flush();
             drawStrategy.draw(first, second, third, color);
+//            System.out.println();
             second = third;
         }
     }

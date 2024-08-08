@@ -11,17 +11,20 @@ public class Camera extends SceneObject {
     private double focus = 1024;
 
     @Override
-    public void transform(Matrix4D transformMatrix) {
-        var matrix = transformMatrix.matrix;
-        var offset = new Vector4D(matrix[0][3], matrix[1][3], matrix[2][3]);
-        matrix[0][3] = matrix[1][3] = matrix[2][3] = 0;
-        transformMatrix.transformVector(vx);
-        transformMatrix.transformVector(vy);
-        transformMatrix.transformVector(vz);
-        var offsetMatrix = new Matrix4D();
-        configureMatrix(offsetMatrix);
-        offsetMatrix.transformVector(offset);
-        getCenter().copy(new Dot4D(getCenter(), offset));
+    public void move(double dx, double dy, double dz) {
+        var offset = new Vector4D(dx, dy, dz);
+        var tm = new Matrix4D();
+        configureMatrix(tm);
+        tm.transformVector(offset);
+        var center = getCenter();
+        center.copy(new Dot4D(center, offset));
+    }
+
+    @Override
+    public void rotate(double ax, double ay, double az) {
+        var tmy = Matrix4D.getRotateMatrix(0, ay, 0);
+        tmy.transformVector(vx);
+        tmy.transformVector(vz);
     }
 
     @Override
@@ -48,13 +51,13 @@ public class Camera extends SceneObject {
     private void configureMatrix(Matrix4D transformMatrix) {
         var matrix = transformMatrix.matrix;
         matrix[0][0] = vx.x;
-        matrix[0][1] = vx.y;
-        matrix[0][2] = vx.z;
-        matrix[1][0] = vy.x;
+        matrix[1][0] = vx.y;
+        matrix[2][0] = vx.z;
+        matrix[0][1] = vy.x;
         matrix[1][1] = vy.y;
-        matrix[1][2] = vy.z;
-        matrix[2][0] = vz.x;
-        matrix[2][1] = vz.y;
+        matrix[2][1] = vy.z;
+        matrix[0][2] = vz.x;
+        matrix[1][2] = vz.y;
         matrix[2][2] = vz.z;
     }
 }

@@ -83,6 +83,6 @@ public class Color {
         var r1 = (int) (((other >> 16) & 0xff) * transparency);
         var g1 = (int) (((other >> 8) & 0xff) * transparency);
         var b1 = (int) ((other & 0xff) * transparency);
-        return MAX_VAL << 24 | (r0 + r1) << 16 | (g0 + g1) << 16 | (b0 + b1);
+        return MAX_VAL << 24 | (r0 + r1) << 16 | (g0 + g1) << 8 | (b0 + b1);
     }
 }

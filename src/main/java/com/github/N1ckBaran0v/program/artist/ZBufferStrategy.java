@@ -15,9 +15,10 @@ public class ZBufferStrategy implements AbstractDrawStrategy {
         var width = image.getWidth();
         var height = image.getHeight();
         xmin = -width / 2;
-        xmax = xmin + width;
+        xmax = xmin + width - 1;
         ymax = height / 2;
-        ymin = ymax - height;
+        ymin = ymax - height + 1;
+//        System.out.println(xmin + " " + xmax + " " + ymin + " " + ymax);
     }
 
     private double[][] createZBuffer(AbstractImage image) {
@@ -43,17 +44,18 @@ public class ZBufferStrategy implements AbstractDrawStrategy {
         var x1 = Math.min(xmax, Math.ceil(Math.max(d1.x, Math.max(d2.x, d3.x))));
         var y0 = Math.max(ymin, Math.floor(Math.min(d1.y, Math.min(d2.y, d3.y))));
         var y1 = Math.min(ymax, Math.ceil(Math.max(d1.y, Math.max(d2.y, d3.y))));
+//        System.out.println(x0 + " " + y0 + " " + x1 + " " + y1);
         var divider = (d1.x - d2.x) * (d2.y - d3.y) - (d2.x - d3.x) * (d1.y - d2.y);
         var i = (int) (x0 - xmin);
         var j0 = (int) (ymax - y0);
         for (var x = x0; x <= x1; ++x, ++i) {
             var j = j0;
             for (var y = y0; y <= y1; ++y, --j) {
-                var k1 = (x - d2.x) * (y - d3.y) - (x - d3.x) * (y - d2.y);
-                var k2 = (x - d3.x) * (y - d1.y) - (x - d1.x) * (y - d3.y);
-                var k3 = (x - d1.x) * (y - d2.y) - (x - d2.x) * (y - d1.y);
-                if (k1 >= 0 && k1 <= divider && k2 >= 0 && k2 <= divider && k3 >= 0 && k3 <= divider) {
-                    var z = (d1.z * k1 + d2.z * k2 + d3.z * k3) / divider;
+                var k1 = ((x - d2.x) * (y - d3.y) - (x - d3.x) * (y - d2.y)) / divider;
+                var k2 = ((x - d3.x) * (y - d1.y) - (x - d1.x) * (y - d3.y)) / divider;
+                var k3 = ((x - d1.x) * (y - d2.y) - (x - d2.x) * (y - d1.y)) / divider;
+                if (k1 >= 0 && k1 <= 1 && k2 >= 0 && k2 <= 1 && k3 >= 0 && k3 <= 1) {
+                    var z = d1.z * k1 + d2.z * k2 + d3.z * k3;
                     if (buffer[i][j] > z) {
                         buffer[i][j] = z;
                         image.setPixel(i, j, color.mix(image.getPixel(i, j)));

@@ -12,10 +12,14 @@ public class Dot4D {
     }
 
     public Dot4D(double x, double y, double z) {
+        this(x, y, z, 1);
+    }
+
+    public Dot4D(double x, double y, double z, double w) {
         this.x = x;
         this.y = y;
         this.z = z;
-        this.w = 1;
+        this.w = w;
     }
 
     public Dot4D(Dot4D start, Vector4D offset) {
