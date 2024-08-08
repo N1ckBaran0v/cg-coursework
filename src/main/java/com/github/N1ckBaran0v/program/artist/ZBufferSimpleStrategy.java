@@ -7,9 +7,21 @@ import com.github.N1ckBaran0v.program.guiAdapters.AbstractImage;
 import java.util.List;
 
 public class ZBufferSimpleStrategy implements AbstractDrawStrategy {
+    private final AbstractImage image;
+    private final double xmin, ymin, xmax, ymax;
+
+    public ZBufferSimpleStrategy(AbstractImage image) {
+        this.image = image;
+        var width = image.getWidth();
+        var height = image.getHeight();
+        xmin = -width / 2;
+        xmax = xmin + width;
+        ymax = height / 2;
+        ymin = ymax - height;
+    }
 
     @Override
-    public void draw(List<Polygon3D> polygon3DList, AbstractImage image) {
+    public void draw(List<Polygon3D> polygon3DList) {
         var buffer = createZBuffer(image);
         for (var polygon : polygon3DList) {
             fill(polygon, image, buffer);
@@ -37,16 +49,16 @@ public class ZBufferSimpleStrategy implements AbstractDrawStrategy {
         var d1 = polygon.first;
         var d2 = polygon.second;
         var d3 = polygon.third;
-        var x0 = Math.round(Math.min(d1.x, Math.min(d2.x, d3.x)));
-        var x1 = Math.round(Math.max(d1.x, Math.max(d2.x, d3.x)));
-        var y0 = Math.round(Math.min(d1.y, Math.min(d2.y, d3.y)));
-        var y1 = Math.round(Math.max(d1.y, Math.max(d2.y, d3.y)));
+        var x0 = Math.max(xmin, Math.floor(Math.min(d1.x, Math.min(d2.x, d3.x))));
+        var x1 = Math.min(xmax, Math.ceil(Math.max(d1.x, Math.max(d2.x, d3.x))));
+        var y0 = Math.max(ymin, Math.floor(Math.min(d1.y, Math.min(d2.y, d3.y))));
+        var y1 = Math.min(ymax, Math.ceil(Math.max(d1.y, Math.max(d2.y, d3.y))));
         var divider = (d1.x - d2.x) * (d2.y - d3.y) - (d2.x - d3.x) * (d1.y - d2.y);
-        var i = (int) Math.abs(x0 - (image.getWidth() >> 1));
-        var j0 = (int) Math.abs(y0 - (image.getHeight() >> 1));
+        var i = (int) (x0 - xmin);
+        var j0 = (int) (ymax - y0);
         for (var x = x0; x <= x1; ++x, ++i) {
             var j = j0;
-            for (var y = y0; y <= y1; ++y, ++j) {
+            for (var y = y0; y <= y1; ++y, --j) {
                 var k1 = (x - d2.x) * (y - d3.y) - (x - d3.x) * (y - d2.y);
                 var k2 = (x - d3.x) * (y - d1.y) - (x - d1.x) * (y - d3.y);
                 var k3 = (x - d1.x) * (y - d2.y) - (x - d2.x) * (y - d1.y);
