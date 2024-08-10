@@ -22,7 +22,7 @@ public class ArtistImplementation implements Artist {
     public void draw(String cameraName) {
         var camera = (Camera) scene.getObject(cameraName);
         var image = abstractDrawFactory.getImage(cameraName);
-        var visitor = new TransformVisitor(camera, image, drawStrategyCreator);
+        var visitor = new TransformVisitor(camera, drawStrategyCreator, image);
         for (var object : scene) {
             object.accept(visitor);
         }

@@ -1,7 +1,7 @@
 package com.github.N1ckBaran0v.program.artist;
 
 import com.github.N1ckBaran0v.program.geometry.Color;
-import com.github.N1ckBaran0v.program.geometry.Dot3D;
+import com.github.N1ckBaran0v.program.geometry.Vector3D;
 import com.github.N1ckBaran0v.program.guiAdapters.AbstractImage;
 
 public class ZBufferStrategy implements AbstractDrawStrategy {
@@ -14,11 +14,10 @@ public class ZBufferStrategy implements AbstractDrawStrategy {
         buffer = createZBuffer(image);
         var width = image.getWidth();
         var height = image.getHeight();
-        xmin = -width / 2;
-        xmax = xmin + width - 1;
-        ymax = height / 2;
-        ymin = ymax - height + 1;
-//        System.out.println(xmin + " " + xmax + " " + ymin + " " + ymax);
+        xmin = 0;
+        xmax = width - 1;
+        ymax = height - 1;
+        ymin = 0;
     }
 
     private double[][] createZBuffer(AbstractImage image) {
@@ -32,19 +31,18 @@ public class ZBufferStrategy implements AbstractDrawStrategy {
             var color = background.mix(0);
             for (var j = 0; j < height; ++j) {
                 image.setPixel(i, j, color);
-                buffer[i][j] = Double.MAX_VALUE;
+                buffer[i][j] = Double.POSITIVE_INFINITY;
             }
         }
         return buffer;
     }
 
     @Override
-    public void draw(Dot3D d1, Dot3D d2, Dot3D d3, Color color) {
+    public void draw(Vector3D d1, Vector3D d2, Vector3D d3, Color color) {
         var x0 = Math.max(xmin, Math.floor(Math.min(d1.x, Math.min(d2.x, d3.x))));
         var x1 = Math.min(xmax, Math.ceil(Math.max(d1.x, Math.max(d2.x, d3.x))));
         var y0 = Math.max(ymin, Math.floor(Math.min(d1.y, Math.min(d2.y, d3.y))));
         var y1 = Math.min(ymax, Math.ceil(Math.max(d1.y, Math.max(d2.y, d3.y))));
-//        System.out.println(x0 + " " + y0 + " " + x1 + " " + y1);
         var divider = (d1.x - d2.x) * (d2.y - d3.y) - (d2.x - d3.x) * (d1.y - d2.y);
         var i = (int) (x0 - xmin);
         var j0 = (int) (ymax - y0);

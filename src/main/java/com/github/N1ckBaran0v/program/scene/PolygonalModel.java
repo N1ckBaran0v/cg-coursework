@@ -1,6 +1,5 @@
 package com.github.N1ckBaran0v.program.scene;
 
-import com.github.N1ckBaran0v.program.geometry.Dot4D;
 import com.github.N1ckBaran0v.program.geometry.Polygon4D;
 import com.github.N1ckBaran0v.program.geometry.Vector4D;
 
@@ -8,7 +7,7 @@ abstract public class PolygonalModel extends SceneObject implements Iterable<Pol
     protected PolygonalModel() {
     }
 
-    protected PolygonalModel(Dot4D center) {
+    protected PolygonalModel(Vector4D center) {
         super(center);
     }
 
