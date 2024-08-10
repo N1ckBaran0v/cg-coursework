@@ -4,13 +4,16 @@ public class Vector4D {
     public double x;
     public double y;
     public double z;
-    public double w;
+    public double w = 1;
+
+
+    public Vector4D() {
+    }
 
     public Vector4D(double x, double y, double z) {
         this.x = x;
         this.y = y;
         this.z = z;
-        this.w = 1;
     }
 
     public Vector4D(Vector4D other) {
@@ -20,21 +23,19 @@ public class Vector4D {
         this.w = other.w;
     }
 
-    public Vector4D(Dot4D start, Dot4D end) {
+    public Vector4D(Vector4D start, Vector4D end) {
         this.x = end.x - start.x;
         this.y = end.y - start.y;
         this.z = end.z - start.z;
-        this.w = 1;
     }
 
-    public Vector4D(Dot4D end) {
-        this.x = end.x;
-        this.y = end.y;
-        this.z = end.z;
-        this.w = 1;
+    public void add(Vector4D other) {
+        this.x += other.x;
+        this.y += other.y;
+        this.z += other.z;
     }
 
-    public Vector4D(Dot4D a, Dot4D b, Dot4D c) {
+    public Vector4D(Vector4D a, Vector4D b, Vector4D c) {
         this(new Vector4D(a, b), new Vector4D(b, c));
     }
 

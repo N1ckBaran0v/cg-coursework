@@ -1,7 +1,5 @@
 package com.github.N1ckBaran0v.program.scene;
 
-import com.github.N1ckBaran0v.program.geometry.Dot4D;
-import com.github.N1ckBaran0v.program.geometry.Matrix4D;
 import com.github.N1ckBaran0v.program.geometry.Polygon4D;
 import com.github.N1ckBaran0v.program.geometry.Vector4D;
 
@@ -26,16 +24,16 @@ public class ConvexObject extends PolygonalModel {
         super.move(dx, dy, dz);
     }
 
-    @Override
-    public void rotate(double ax, double ay, double az) {
-        var tm = Matrix4D.getRotateMatrix(ax, ay, az);
-        var center = getCenter();
-        for (var dot : dots) {
-            var offset = new Vector4D(center, dot);
-            tm.transformVector(offset);
-            dot.copy(new Dot4D(center, offset));
-        }
-    }
+//    @Override
+//    public void rotate(double ax, double ay, double az) {
+//        var tm = Matrix4D.getRotateMatrix(ax, ay, az);
+//        var center = getCenter();
+//        for (var dot : dots) {
+//            var offset = new Vector4D(center, dot);
+//            tm.transformVector(offset);
+//            dot.copy(new Dot4D(center, offset));
+//        }
+//    }
 
     @Override
     public Iterator<Polygon4D> iterator() {

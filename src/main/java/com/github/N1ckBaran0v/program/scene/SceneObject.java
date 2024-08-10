@@ -1,6 +1,5 @@
 package com.github.N1ckBaran0v.program.scene;
 
-import com.github.N1ckBaran0v.program.geometry.Dot4D;
 import com.github.N1ckBaran0v.program.geometry.Vector4D;
 
 import javax.naming.OperationNotSupportedException;

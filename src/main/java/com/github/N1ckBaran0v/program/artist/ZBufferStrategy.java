@@ -1,7 +1,6 @@
 package com.github.N1ckBaran0v.program.artist;
 
 import com.github.N1ckBaran0v.program.geometry.Color;
-import com.github.N1ckBaran0v.program.geometry.Dot3D;
 import com.github.N1ckBaran0v.program.guiAdapters.AbstractImage;
 
 public class ZBufferStrategy implements AbstractDrawStrategy {

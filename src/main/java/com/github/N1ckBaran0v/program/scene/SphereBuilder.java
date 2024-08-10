@@ -1,7 +1,6 @@
 package com.github.N1ckBaran0v.program.scene;
 
 import com.github.N1ckBaran0v.program.geometry.Color;
-import com.github.N1ckBaran0v.program.geometry.Dot4D;
 import com.github.N1ckBaran0v.program.geometry.Polygon4D;
 
 import java.util.*;
