@@ -1,7 +1,7 @@
 package com.github.N1ckBaran0v.program.scene;
 
-class SphereCreator implements SceneObjectCreator {
-    private final SphereBuilder builder = new SphereBuilder();
+class ConvexModelCreator implements SceneObjectCreator {
+    private final ConvexModelBuilder builder = new ConvexModelBuilder();
 
     @Override
     public SceneObject create() {

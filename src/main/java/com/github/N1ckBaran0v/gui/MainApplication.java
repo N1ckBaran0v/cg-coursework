@@ -17,7 +17,7 @@ public class MainApplication implements Runnable {
         var factory = new SwingFactory();
         Facade.setDrawFactory(factory);
         var panel = new CanvasPanel(factory);
-        Facade.execute(new AddObjectCommand("Sphere 1", "Sphere"));
+        Facade.execute(new AddObjectCommand("ConvexModel 1", "ConvexModel"));
 //        Facade.execute(new RotateCommand("Sphere 1", 50, 0, 0));
         frame.setContentPane(panel);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);

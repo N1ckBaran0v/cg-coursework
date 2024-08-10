@@ -12,11 +12,9 @@ public class Camera extends SceneObject {
     @Override
     public void move(double dx, double dy, double dz) {
         var offset = new Vector4D(dx, dy, dz);
-        var tm = getTransformMatrix();
+        var tm = getInverseMatrix();
         tm.transformVector(offset);
-        System.out.println(offset.x + " " + offset.y + " " + offset.z);
-        var center = getCenter();
-        center.copy(new Dot4D(center, offset));
+        getCenter().add(offset);
     }
 
 //    @Override
@@ -50,10 +48,20 @@ public class Camera extends SceneObject {
         tm.zx = vz.x;
         tm.zy = vz.y;
         tm.zz = vz.z;
-        var center = getCenter();
-        tm.xw = -center.x;
-        tm.yw = -center.y;
-        tm.zw = -center.z;
+        return tm;
+    }
+
+    public Matrix4D getInverseMatrix() {
+        var tm = new Matrix4D();
+        tm.xx = vx.x;
+        tm.yx = vx.y;
+        tm.zx = vx.z;
+        tm.xy = vy.x;
+        tm.yy = vy.y;
+        tm.zy = vy.z;
+        tm.xz = vz.x;
+        tm.yz = vz.y;
+        tm.zz = vz.z;
         return tm;
     }
 }

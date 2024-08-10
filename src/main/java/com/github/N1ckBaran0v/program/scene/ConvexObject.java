@@ -7,9 +7,9 @@ import java.util.*;
 
 public class ConvexObject extends PolygonalModel {
     private final List<Polygon4D> polygons;
-    private final Set<Dot4D> dots;
+    private final Set<Vector4D> dots;
 
-    public ConvexObject(Dot4D center, List<Polygon4D> polygons, Set<Dot4D> dots) {
+    public ConvexObject(Vector4D center, List<Polygon4D> polygons, Set<Vector4D> dots) {
         super(center);
         this.polygons = polygons;
         this.dots = dots;
@@ -17,9 +17,8 @@ public class ConvexObject extends PolygonalModel {
 
     @Override
     public void move(double dx, double dy, double dz) {
-        var offset = new Vector4D(dx, dy, dz);
         for (var dot : dots) {
-            dot.copy(new Dot4D(dot, offset));
+            dot.add(dx, dy, dz);
         }
         super.move(dx, dy, dz);
     }

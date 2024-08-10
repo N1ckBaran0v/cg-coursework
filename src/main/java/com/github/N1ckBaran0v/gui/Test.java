@@ -7,7 +7,7 @@ import javax.swing.*;
 
 public class Test extends Thread {
     private final JPanel panel;
-    private final RotateCommand rotate = new RotateCommand("Sphere 1", 1, 0, 0);
+    private final RotateCommand rotate = new RotateCommand("ConvexModel 1", 1, 0, 0);
 
     public Test(JPanel panel) {
         this.panel = panel;
