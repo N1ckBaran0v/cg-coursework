@@ -5,10 +5,10 @@ import com.github.N1ckBaran0v.program.geometry.Polygon4D;
 
 import java.util.*;
 
-class SphereBuilder {
+class ConvexModelBuilder {
     private final List<Dot4D> dots = new ArrayList<>();
 
-    public SphereBuilder() {
+    public ConvexModelBuilder() {
         var radius = 300.0;
         dots.add(new Dot4D(0, 0, radius));
         dots.add(new Dot4D(radius, 0, 0));
