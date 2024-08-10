@@ -91,4 +91,26 @@ public class Matrix4D {
         result.ww = wx * other.xw + wy * other.yw + wz * other.zw + ww * other.ww;
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "Matrix4D{" +
+                "xx=" + xx +
+                ", xy=" + xy +
+                ", xz=" + xz +
+                ", xw=" + xw +
+                ",\n         yx=" + yx +
+                ", yy=" + yy +
+                ", yz=" + yz +
+                ", yw=" + yw +
+                ",\n         zx=" + zx +
+                ", zy=" + zy +
+                ", zz=" + zz +
+                ", zw=" + zw +
+                ",\n         wx=" + wx +
+                ", wy=" + wy +
+                ", wz=" + wz +
+                ", ww=" + ww +
+                '}';
+    }
 }

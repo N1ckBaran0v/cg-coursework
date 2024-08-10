@@ -71,6 +71,6 @@ public class Vector4D {
     }
 
     public Vector3D toVector3D(double cx, double cy) {
-        return new Vector3D(cx * x / w, cy * y / w, z / w);
+        return new Vector3D(cx * (x / w + 1), cy * (y / w + 1), z / w - 1);
     }
 }

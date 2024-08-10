@@ -1,6 +1,7 @@
 package com.github.N1ckBaran0v.program.artist;
 
 import com.github.N1ckBaran0v.program.geometry.Color;
+import com.github.N1ckBaran0v.program.geometry.Vector3D;
 import com.github.N1ckBaran0v.program.guiAdapters.AbstractImage;
 
 public class ZBufferStrategy implements AbstractDrawStrategy {
@@ -13,10 +14,10 @@ public class ZBufferStrategy implements AbstractDrawStrategy {
         buffer = createZBuffer(image);
         var width = image.getWidth();
         var height = image.getHeight();
-        xmin = -width / 2;
-        xmax = xmin + width - 1;
-        ymax = height / 2;
-        ymin = ymax - height + 1;
+        xmin = 0;
+        xmax = width - 1;
+        ymax = height - 1;
+        ymin = 0;
 //        System.out.println(xmin + " " + xmax + " " + ymin + " " + ymax);
     }
 
@@ -38,7 +39,7 @@ public class ZBufferStrategy implements AbstractDrawStrategy {
     }
 
     @Override
-    public void draw(Dot3D d1, Dot3D d2, Dot3D d3, Color color) {
+    public void draw(Vector3D d1, Vector3D d2, Vector3D d3, Color color) {
         var x0 = Math.max(xmin, Math.floor(Math.min(d1.x, Math.min(d2.x, d3.x))));
         var x1 = Math.min(xmax, Math.ceil(Math.max(d1.x, Math.max(d2.x, d3.x))));
         var y0 = Math.max(ymin, Math.floor(Math.min(d1.y, Math.min(d2.y, d3.y))));
