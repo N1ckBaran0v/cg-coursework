@@ -9,7 +9,8 @@ import java.util.*;
 class ConvexModelBuilder {
     private final List<Vector4D> dots = new ArrayList<>();
 
-    public ConvexModelBuilder() {
+    private void innerCreateDots() {
+        dots.clear();
         var radius = 300.0;
         dots.add(new Vector4D(0, 0, radius));
         dots.add(new Vector4D(radius, 0, 0));
@@ -24,6 +25,7 @@ class ConvexModelBuilder {
     }
 
     public List<Polygon4D> createPolygons() {
+        innerCreateDots();
         var polygons = new ArrayList<Polygon4D>();
         var gen = new Random();
         var dh = dots.get(0);

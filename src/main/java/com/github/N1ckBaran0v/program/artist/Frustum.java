@@ -30,7 +30,6 @@ class Frustum {
     }
 
     public Matrix4D getTransformMatrix() {
-        System.out.println(transformMatrix);
         return transformMatrix;
     }
 }

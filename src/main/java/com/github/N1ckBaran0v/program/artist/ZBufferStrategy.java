@@ -18,7 +18,6 @@ public class ZBufferStrategy implements AbstractDrawStrategy {
         xmax = width - 1;
         ymax = height - 1;
         ymin = 0;
-//        System.out.println(xmin + " " + xmax + " " + ymin + " " + ymax);
     }
 
     private double[][] createZBuffer(AbstractImage image) {
@@ -32,7 +31,7 @@ public class ZBufferStrategy implements AbstractDrawStrategy {
             var color = background.mix(0);
             for (var j = 0; j < height; ++j) {
                 image.setPixel(i, j, color);
-                buffer[i][j] = Double.MAX_VALUE;
+                buffer[i][j] = Double.POSITIVE_INFINITY;
             }
         }
         return buffer;
@@ -44,7 +43,6 @@ public class ZBufferStrategy implements AbstractDrawStrategy {
         var x1 = Math.min(xmax, Math.ceil(Math.max(d1.x, Math.max(d2.x, d3.x))));
         var y0 = Math.max(ymin, Math.floor(Math.min(d1.y, Math.min(d2.y, d3.y))));
         var y1 = Math.min(ymax, Math.ceil(Math.max(d1.y, Math.max(d2.y, d3.y))));
-//        System.out.println(x0 + " " + y0 + " " + x1 + " " + y1);
         var divider = (d1.x - d2.x) * (d2.y - d3.y) - (d2.x - d3.x) * (d1.y - d2.y);
         var i = (int) (x0 - xmin);
         var j0 = (int) (ymax - y0);

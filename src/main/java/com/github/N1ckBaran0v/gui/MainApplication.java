@@ -2,7 +2,6 @@ package com.github.N1ckBaran0v.gui;
 
 import com.github.N1ckBaran0v.program.AddObjectCommand;
 import com.github.N1ckBaran0v.program.Facade;
-import com.github.N1ckBaran0v.program.RotateCommand;
 import com.github.N1ckBaran0v.swingAdapters.SwingFactory;
 
 import javax.swing.*;
@@ -18,7 +17,6 @@ public class MainApplication implements Runnable {
         Facade.setDrawFactory(factory);
         var panel = new CanvasPanel(factory);
         Facade.execute(new AddObjectCommand("ConvexModel 1", "ConvexModel"));
-//        Facade.execute(new RotateCommand("Sphere 1", 50, 0, 0));
         frame.setContentPane(panel);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setVisible(true);

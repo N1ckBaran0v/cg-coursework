@@ -1,5 +1,6 @@
 package com.github.N1ckBaran0v.program.scene;
 
+import com.github.N1ckBaran0v.program.geometry.Axis;
 import com.github.N1ckBaran0v.program.geometry.Matrix4D;
 import com.github.N1ckBaran0v.program.geometry.Vector4D;
 
@@ -7,7 +8,7 @@ public class Camera extends SceneObject {
     private final Vector4D vx = new Vector4D(0, 1, 0);
     private final Vector4D vy = new Vector4D(0, 0, 1);
     private final Vector4D vz = new Vector4D(1, 0, 0);
-    private double focus = 1024;
+    private double focus = 512;
 
     @Override
     public void move(double dx, double dy, double dz) {
@@ -17,12 +18,16 @@ public class Camera extends SceneObject {
         getCenter().add(offset);
     }
 
-//    @Override
-//    public void rotate(double ax, double ay, double az) {
-//        var tmy = Matrix4D.getRotateMatrix(0, ay, 0);
-//        tmy.transformVector(vx);
-//        tmy.transformVector(vz);
-//    }
+    @Override
+    public void rotate(double ax, double ay, double az) {
+        var tmy = Matrix4D.getRotateMatrix(az, Axis.OZ);
+        tmy.transformVector(vx);
+        tmy.transformVector(vy);
+        tmy.transformVector(vz);
+        vx.normalize();
+        vy.normalize();
+        vz.normalize();
+    }
 
     @Override
     public void accept(SceneObjectVisitor visitor) {

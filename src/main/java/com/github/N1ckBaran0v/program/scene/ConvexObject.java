@@ -23,17 +23,6 @@ public class ConvexObject extends PolygonalModel {
         super.move(dx, dy, dz);
     }
 
-//    @Override
-//    public void rotate(double ax, double ay, double az) {
-//        var tm = Matrix4D.getRotateMatrix(ax, ay, az);
-//        var center = getCenter();
-//        for (var dot : dots) {
-//            var offset = new Vector4D(center, dot);
-//            tm.transformVector(offset);
-//            dot.copy(new Dot4D(center, offset));
-//        }
-//    }
-
     @Override
     public Iterator<Polygon4D> iterator() {
         return polygons.iterator();
