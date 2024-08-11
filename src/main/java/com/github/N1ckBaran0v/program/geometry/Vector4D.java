@@ -39,6 +39,12 @@ public class Vector4D {
         this.z += dz;
     }
 
+    public void set(double x, double y, double z) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+    }
+
     public static Vector4D getNormal(Vector4D a, Vector4D b, Vector4D c) {
         var result = vectorMultiply(Vector4D.sub(a, b), Vector4D.sub(b, c));
         result.normalize();

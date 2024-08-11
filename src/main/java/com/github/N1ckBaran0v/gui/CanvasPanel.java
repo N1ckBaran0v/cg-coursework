@@ -13,6 +13,7 @@ class CanvasPanel extends JPanel {
     private static int cameras = 0;
     private final SwingFactory factory;
     private final DrawCommand drawCommand;
+    private final CameraMover mover;
 
     public CanvasPanel(SwingFactory drawFactory) {
         factory = drawFactory;
@@ -21,13 +22,17 @@ class CanvasPanel extends JPanel {
         Facade.execute(new MoveCommand(name, 0, 0, 1024));
         drawFactory.register(name, this);
         drawCommand = new DrawCommand(name);
-        var test = new Test(this);
-        test.start();
+        mover = new CameraMover(name, this);
+        mover.start();
     }
 
     @Override
     public void paint(Graphics g) {
         factory.setGraphics(this, g);
         Facade.execute(drawCommand);
+    }
+
+    public CameraMover getMover() {
+        return mover;
     }
 }

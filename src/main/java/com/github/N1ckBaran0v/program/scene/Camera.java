@@ -1,6 +1,5 @@
 package com.github.N1ckBaran0v.program.scene;
 
-import com.github.N1ckBaran0v.program.geometry.Axis;
 import com.github.N1ckBaran0v.program.geometry.Matrix4D;
 import com.github.N1ckBaran0v.program.geometry.Vector4D;
 
@@ -9,24 +8,44 @@ public class Camera extends SceneObject {
     private final Vector4D vy = new Vector4D(0, 0, 1);
     private final Vector4D vz = new Vector4D(1, 0, 0);
     private double focus = 512;
+    private static final double EPS = 5e-7;
+    private static final double MAX_ANGLE = 90;
+    private static final double CIRCLE = 360;
+    private double angleY, angleZ;
 
     @Override
     public void move(double dx, double dy, double dz) {
-        var offset = new Vector4D(dx, dy, dz);
+        var offset = new Vector4D(dx, 0, dz);
         var tm = getInverseMatrix();
         tm.transformVector(offset);
-        getCenter().add(offset);
+        var center = getCenter();
+        center.add(offset);
+        center.add(0, 0, dy);
     }
 
     @Override
     public void rotate(double ax, double ay, double az) {
-        var tmy = Matrix4D.getRotateMatrix(az, Axis.OZ);
-        tmy.transformVector(vx);
-        tmy.transformVector(vy);
-        tmy.transformVector(vz);
-        vx.normalize();
-        vy.normalize();
-        vz.normalize();
+        angleY += ay;
+        if (angleY > MAX_ANGLE) {
+            angleY = MAX_ANGLE;
+        } else if (angleY < -MAX_ANGLE) {
+            angleY = -MAX_ANGLE;
+        }
+        angleZ += az;
+        if (angleZ >= CIRCLE) {
+            angleZ -= CIRCLE;
+        } else if (angleZ <= -CIRCLE) {
+            angleZ += CIRCLE;
+        }
+        var ray = Math.toRadians(angleY);
+        var raz = Math.toRadians(angleZ);
+        var cosAlpha = Math.cos(raz);
+        var sinAlpha = Math.sin(raz);
+        var cosBetta = Math.cos(ray);
+        var sinBetta = Math.sin(ray);
+        vx.set(-sinAlpha, cosAlpha, 0);
+        vy.set(-sinBetta * cosAlpha, -sinBetta * sinAlpha, cosBetta);
+        vz.set(cosBetta * cosAlpha, cosBetta * sinAlpha, sinBetta);
     }
 
     @Override
@@ -56,7 +75,7 @@ public class Camera extends SceneObject {
         return tm;
     }
 
-    public Matrix4D getInverseMatrix() {
+    private Matrix4D getInverseMatrix() {
         var tm = new Matrix4D();
         tm.xx = vx.x;
         tm.yx = vx.y;
