@@ -43,7 +43,7 @@ public class Camera extends SceneObject {
         var sinAlpha = Math.sin(raz);
         var cosBetta = Math.cos(ray);
         var sinBetta = Math.sin(ray);
-        vx.set(-cosBetta * sinAlpha, cosBetta * cosAlpha, sinBetta);
+        vx.set(-sinAlpha, cosAlpha, 0);
         vy.set(-sinBetta * cosAlpha, -sinBetta * sinAlpha, cosBetta);
         vz.set(cosBetta * cosAlpha, cosBetta * sinAlpha, sinBetta);
     }

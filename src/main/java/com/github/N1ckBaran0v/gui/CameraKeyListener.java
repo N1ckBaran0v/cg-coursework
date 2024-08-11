@@ -12,12 +12,10 @@ class CameraKeyListener implements KeyListener {
 
     @Override
     public void keyTyped(KeyEvent keyEvent) {
-        System.out.println("Tapped: " + keyEvent.getKeyCode());
     }
 
     @Override
     public void keyPressed(KeyEvent keyEvent) {
-        System.out.println("Pressed: " + keyEvent.getKeyCode());
         switch (keyEvent.getKeyCode()) {
             case 87 -> mover.setGoForward(true);
             case 83 -> mover.setGoBack(true);
@@ -35,7 +33,6 @@ class CameraKeyListener implements KeyListener {
 
     @Override
     public void keyReleased(KeyEvent keyEvent) {
-        System.out.println("Released " + keyEvent.getKeyCode());
         switch (keyEvent.getKeyCode()) {
             case 87 -> mover.setGoForward(false);
             case 83 -> mover.setGoBack(false);
