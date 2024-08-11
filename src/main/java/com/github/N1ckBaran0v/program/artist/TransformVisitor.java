@@ -18,7 +18,7 @@ class TransformVisitor implements SceneObjectVisitor {
     private final AbstractDrawStrategy drawStrategy;
     private final Matrix4D cameraMatrix, frustumMatrix;
     private final int width, height;
-    private final double minZ, halfWidth, halfHeight;
+    private final double minZ, halfWidth, halfHeight, focus;
     private final Map<Vector4D, Vector4D> transformed = new HashMap<>();
     private final Map<Vector4D, Vector3D> formatted = new HashMap<>();
     private final Map2D<Vector4D, Vector4D> intersection = new HashMap2D<>();
@@ -28,15 +28,16 @@ class TransformVisitor implements SceneObjectVisitor {
 
     public TransformVisitor(Camera camera, DrawStrategyCreator drawStrategyCreator, AbstractImage image) {
         center = camera.getCenter();
+        focus = camera.getFocus();
         drawStrategy = drawStrategyCreator.create(image);
         cameraMatrix = camera.getTransformMatrix();
         width = image.getWidth();
         halfWidth = width / 2.0;
         height = image.getHeight();
         halfHeight = height / 2.0;
-        var frustum = new Frustum(image, camera.getFocus(), camera.getFocus() * 4);
+        var frustum = new Frustum(image, focus, focus * 4);
         frustumMatrix = frustum.getTransformMatrix();
-        minZ = camera.getFocus();
+        minZ = focus;
     }
 
     @Override
@@ -52,10 +53,11 @@ class TransformVisitor implements SceneObjectVisitor {
             if (dot == null) {
                 dot = Vector4D.sub(center, elem);
                 cameraMatrix.transformVector(dot);
+                dot.add(0, 0, focus);
                 frustumMatrix.transformVector(dot);
                 transformed.put(elem, dot);
             }
-            if (dot.w >= minZ) {
+            if (dot.w >= focus) {
                 maybeVisible.add(dot);
             } else {
                 invalid.add(dot);

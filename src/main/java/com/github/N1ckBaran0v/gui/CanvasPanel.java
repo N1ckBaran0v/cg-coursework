@@ -19,7 +19,7 @@ class CanvasPanel extends JPanel {
         factory = drawFactory;
         var name = "Camera " + ++cameras;
         Facade.execute(new AddObjectCommand(name, "Camera"));
-        Facade.execute(new MoveCommand(name, 0, 0, 1024));
+//        Facade.execute(new MoveCommand(name, 0, 0, 1024));
         drawFactory.register(name, this);
         drawCommand = new DrawCommand(name);
         mover = new CameraMover(name, this);
