@@ -13,7 +13,7 @@ class ConvexModelBuilder {
         dots.clear();
         var radius = 300.0;
         dots.add(new Vector4D(0, 0, radius));
-        dots.add(new Vector4D(radius / 2, 0, 0));
+        dots.add(new Vector4D(radius, 0, 0));
         dots.add(new Vector4D(0, radius, 0));
         dots.add(new Vector4D(-radius, 0, 0));
         dots.add(new Vector4D(0, -radius, 0));

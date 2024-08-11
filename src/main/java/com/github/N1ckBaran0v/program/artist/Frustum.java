@@ -11,20 +11,12 @@ class Frustum {
         var far = focus + visibility;
         var width = image.getWidth();
         var height = image.getHeight();
-        var left =  width / 2.0;
-        var right = left - width + 1;
-        var top = height / 2.0;
-        var bottom = top - height + 1;
-        var rl = right - left;
-        var tb = top - bottom;
-        var tn = 2 * near;
-        var fn = visibility;
-        transformMatrix.xx = tn / rl;
-        transformMatrix.xz = (right + left) / rl;
-        transformMatrix.yy = tn / tb;
-        transformMatrix.yz = (top + bottom) / tb;
-        transformMatrix.zz = (far + near) / fn;
-        transformMatrix.zw = -2 * far * near / fn;
+        transformMatrix.xx = -near;
+        transformMatrix.xz = width / 2.0;
+        transformMatrix.yy = near;
+        transformMatrix.yz = height / 2.0;;
+        transformMatrix.zz = far / visibility;
+        transformMatrix.zw = transformMatrix.zz * -near;
         transformMatrix.wz = 1;
         transformMatrix.ww = 0;
     }

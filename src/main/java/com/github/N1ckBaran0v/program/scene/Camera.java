@@ -7,7 +7,7 @@ public class Camera extends SceneObject {
     private final Vector4D vx = new Vector4D(1, 0, 0);
     private final Vector4D vy = new Vector4D(0, 1, 0);
     private final Vector4D vz = new Vector4D(0, 0, 1);
-    private double focus = 512;
+    private double focus = 512, visibility = 2048;
     private static final double EPS = 5e-7;
     private static final double MAX_ANGLE = 90;
     private static final double CIRCLE = 360;
@@ -72,6 +72,7 @@ public class Camera extends SceneObject {
         tm.zx = vz.x;
         tm.zy = vz.y;
         tm.zz = vz.z;
+        tm.zw = focus;
         return tm;
     }
 
@@ -87,5 +88,13 @@ public class Camera extends SceneObject {
         tm.yz = vz.y;
         tm.zz = vz.z;
         return tm;
+    }
+
+    public double getVisibility() {
+        return visibility;
+    }
+
+    public void setVisibility(double visibility) {
+        this.visibility = visibility;
     }
 }

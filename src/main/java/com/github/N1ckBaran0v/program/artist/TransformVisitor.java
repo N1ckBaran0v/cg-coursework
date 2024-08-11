@@ -17,8 +17,7 @@ class TransformVisitor implements SceneObjectVisitor {
     private final Vector4D center;
     private final AbstractDrawStrategy drawStrategy;
     private final Matrix4D cameraMatrix, frustumMatrix;
-    private final int width, height;
-    private final double minZ, halfWidth, halfHeight, focus;
+    private final double focus;
     private final Map<Vector4D, Vector4D> transformed = new HashMap<>();
     private final Map<Vector4D, Vector3D> formatted = new HashMap<>();
     private final Map2D<Vector4D, Vector4D> intersection = new HashMap2D<>();
@@ -31,13 +30,8 @@ class TransformVisitor implements SceneObjectVisitor {
         focus = camera.getFocus();
         drawStrategy = drawStrategyCreator.create(image);
         cameraMatrix = camera.getTransformMatrix();
-        width = image.getWidth();
-        halfWidth = width / 2.0;
-        height = image.getHeight();
-        halfHeight = height / 2.0;
-        var frustum = new Frustum(image, focus, focus * 4);
+        var frustum = new Frustum(image, focus, camera.getVisibility());
         frustumMatrix = frustum.getTransformMatrix();
-        minZ = focus;
     }
 
     @Override
@@ -53,7 +47,6 @@ class TransformVisitor implements SceneObjectVisitor {
             if (dot == null) {
                 dot = Vector4D.sub(center, elem);
                 cameraMatrix.transformVector(dot);
-                dot.add(0, 0, focus);
                 frustumMatrix.transformVector(dot);
                 transformed.put(elem, dot);
             }
@@ -81,9 +74,9 @@ class TransformVisitor implements SceneObjectVisitor {
     private Vector4D findDot(Vector4D a, Vector4D b) {
         var result = intersection.get(a, b);
         if (result == null) {
-            var t = (b.w - minZ) / (b.w - a.w);
-            result = new Vector4D(b.x + (a.x - b.x) * t, b.y + (a.y - b.y) * t, -minZ);
-            result.w = minZ;
+            var t = (b.w - focus) / (b.w - a.w);
+            result = new Vector4D(b.x + (a.x - b.x) * t, b.y + (a.y - b.y) * t, 0);
+            result.w = focus;
             intersection.put(a, b, result);
         }
         return result;
@@ -92,7 +85,7 @@ class TransformVisitor implements SceneObjectVisitor {
     private Vector3D getFormattedDot(Vector4D dot) {
         var formattedDot = formatted.get(dot);
         if (formattedDot == null) {
-            formattedDot = dot.toVector3D(halfWidth, halfHeight);
+            formattedDot = dot.toVector3D();
             formatted.put(dot, formattedDot);
         }
         return formattedDot;
