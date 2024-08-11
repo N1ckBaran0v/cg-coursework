@@ -4,9 +4,9 @@ import com.github.N1ckBaran0v.program.geometry.Matrix4D;
 import com.github.N1ckBaran0v.program.geometry.Vector4D;
 
 public class Camera extends SceneObject {
-    private final Vector4D vx = new Vector4D(0, 1, 0);
-    private final Vector4D vy = new Vector4D(0, 0, 1);
-    private final Vector4D vz = new Vector4D(1, 0, 0);
+    private final Vector4D vx = new Vector4D(1, 0, 0);
+    private final Vector4D vy = new Vector4D(0, 1, 0);
+    private final Vector4D vz = new Vector4D(0, 0, 1);
     private double focus = 512;
     private static final double EPS = 5e-7;
     private static final double MAX_ANGLE = 90;
@@ -20,7 +20,7 @@ public class Camera extends SceneObject {
         tm.transformVector(offset);
         var center = getCenter();
         center.add(offset);
-        center.add(0, 0, dy);
+        center.add(0, dy, 0);
     }
 
     @Override
@@ -43,9 +43,9 @@ public class Camera extends SceneObject {
         var sinAlpha = Math.sin(raz);
         var cosBetta = Math.cos(ray);
         var sinBetta = Math.sin(ray);
-        vx.set(-sinAlpha, cosAlpha, 0);
-        vy.set(-sinBetta * cosAlpha, -sinBetta * sinAlpha, cosBetta);
-        vz.set(cosBetta * cosAlpha, cosBetta * sinAlpha, sinBetta);
+        vx.set(cosAlpha, 0, -sinAlpha);
+        vy.set(-sinBetta * sinAlpha, cosBetta, -sinBetta * cosAlpha);
+        vz.set(sinAlpha * cosBetta, sinBetta, cosAlpha * cosBetta);
     }
 
     @Override

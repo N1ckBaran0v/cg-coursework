@@ -22,10 +22,10 @@ class CameraMover extends Thread {
         while (true) {
             var counter = 0;
             if (lookUp && !lookDown) {
-                Facade.execute(new RotateCommand(cameraName, 0, -DEGREES, 0));
+                Facade.execute(new RotateCommand(cameraName, 0, DEGREES, 0));
                 ++counter;
             } else if (lookDown && !lookUp) {
-                Facade.execute(new RotateCommand(cameraName, 0, DEGREES, 0));
+                Facade.execute(new RotateCommand(cameraName, 0, -DEGREES, 0));
                 ++counter;
             }
             if (lookLeft && !lookRight) {
@@ -43,17 +43,17 @@ class CameraMover extends Thread {
                 ++counter;
             }
             if (goForward && !goBack) {
-                Facade.execute(new MoveCommand(cameraName, 0, 0, -STEP));
+                Facade.execute(new MoveCommand(cameraName, 0, 0, STEP));
                 ++counter;
             } else if (goBack && !goForward) {
-                Facade.execute(new MoveCommand(cameraName, 0, 0, STEP));
+                Facade.execute(new MoveCommand(cameraName, 0, 0, -STEP));
                 ++counter;
             }
             if (goLeft && !goRight) {
-                Facade.execute(new MoveCommand(cameraName, -STEP, 0, 0));
+                Facade.execute(new MoveCommand(cameraName, STEP, 0, 0));
                 ++counter;
             } else if (goRight && !goLeft) {
-                Facade.execute(new MoveCommand(cameraName, STEP, 0, 0));
+                Facade.execute(new MoveCommand(cameraName, -STEP, 0, 0));
                 ++counter;
             }
             if (counter > 0) {
