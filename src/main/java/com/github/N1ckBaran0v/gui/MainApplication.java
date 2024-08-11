@@ -18,6 +18,7 @@ public class MainApplication implements Runnable {
         var panel = new CanvasPanel(factory);
         Facade.execute(new AddObjectCommand("ConvexModel 1", "ConvexModel"));
         frame.setContentPane(panel);
+        frame.addKeyListener(new CameraKeyListener(panel.getMover()));
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setVisible(true);
     }
