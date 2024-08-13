@@ -3,7 +3,6 @@ package com.github.N1ckBaran0v.gui;
 import com.github.N1ckBaran0v.program.AddObjectCommand;
 import com.github.N1ckBaran0v.program.DrawCommand;
 import com.github.N1ckBaran0v.program.Facade;
-import com.github.N1ckBaran0v.program.MoveCommand;
 import com.github.N1ckBaran0v.swingAdapters.SwingFactory;
 
 import javax.swing.*;
@@ -14,15 +13,15 @@ class CanvasPanel extends JPanel {
     private final SwingFactory factory;
     private final DrawCommand drawCommand;
     private final CameraMover mover;
+    private final String cameraName;
 
     public CanvasPanel(SwingFactory drawFactory) {
         factory = drawFactory;
-        var name = "Camera " + ++cameras;
-        Facade.execute(new AddObjectCommand(name, "Camera"));
-//        Facade.execute(new MoveCommand(name, 0, 0, 1024));
-        drawFactory.register(name, this);
-        drawCommand = new DrawCommand(name);
-        mover = new CameraMover(name, this);
+        cameraName = "Camera " + ++cameras;
+        Facade.execute(new AddObjectCommand(cameraName, "Camera"));
+        drawFactory.register(cameraName, this);
+        drawCommand = new DrawCommand(cameraName);
+        mover = new CameraMover(cameraName, this);
         mover.start();
     }
 
@@ -34,5 +33,9 @@ class CanvasPanel extends JPanel {
 
     public CameraMover getMover() {
         return mover;
+    }
+
+    public String getCameraName() {
+        return cameraName;
     }
 }

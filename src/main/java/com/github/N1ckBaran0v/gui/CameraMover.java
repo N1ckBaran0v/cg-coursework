@@ -56,14 +56,7 @@ class CameraMover extends Thread {
                 Facade.execute(new MoveCommand(cameraName, -STEP, 0, 0));
                 ++counter;
             }
-            if (counter > 0) {
-                panel.paint(panel.getGraphics());
-            } else {
-                try {
-                    sleep(1000);
-                } catch (InterruptedException ignored) {
-                }
-            }
+            panel.paint(panel.getGraphics());
         }
     }
 

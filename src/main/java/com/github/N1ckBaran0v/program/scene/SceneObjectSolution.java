@@ -8,7 +8,6 @@ class SceneObjectSolution {
 
     public SceneObjectSolution() {
         creatorMap.put("Camera", new CameraCreator());
-        creatorMap.put("ConvexModel", new ConvexModelCreator());
     }
 
     public SceneObjectCreator getCreator(String name) {

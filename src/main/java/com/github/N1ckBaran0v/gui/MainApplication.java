@@ -1,6 +1,5 @@
 package com.github.N1ckBaran0v.gui;
 
-import com.github.N1ckBaran0v.program.AddObjectCommand;
 import com.github.N1ckBaran0v.program.Facade;
 import com.github.N1ckBaran0v.swingAdapters.SwingFactory;
 
@@ -16,7 +15,6 @@ public class MainApplication implements Runnable {
         var factory = new SwingFactory();
         Facade.setDrawFactory(factory);
         var panel = new CanvasPanel(factory);
-        Facade.execute(new AddObjectCommand("ConvexModel 1", "ConvexModel"));
         frame.setContentPane(panel);
         frame.addKeyListener(new CameraKeyListener(panel.getMover()));
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);

@@ -23,6 +23,10 @@ abstract public class SceneObject {
         throw new RuntimeException(new OperationNotSupportedException());
     }
 
+    public void setPosition(double x, double y, double z) {
+        center.set(x, y, z);
+    }
+
     public Vector4D getCenter() {
         return center;
     }

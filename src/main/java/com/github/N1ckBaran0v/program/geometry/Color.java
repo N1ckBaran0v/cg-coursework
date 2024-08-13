@@ -1,6 +1,6 @@
 package com.github.N1ckBaran0v.program.geometry;
 
-public class Color {
+public class Color implements Cloneable {
     private final int r;
     private final int g;
     private final int b;
@@ -84,5 +84,10 @@ public class Color {
         var g1 = (int) (((other >> 8) & 0xff) * transparency);
         var b1 = (int) ((other & 0xff) * transparency);
         return MAX_VAL << 24 | (r0 + r1) << 16 | (g0 + g1) << 8 | (b0 + b1);
+    }
+
+    @Override
+    public Color clone() {
+        return new Color(r, g, b, alpha, brightness);
     }
 }

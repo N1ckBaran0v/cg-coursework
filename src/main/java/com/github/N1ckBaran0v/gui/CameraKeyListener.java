@@ -28,7 +28,6 @@ class CameraKeyListener implements KeyListener {
             case 37 -> mover.setLookLeft(true);
             case 39 -> mover.setLookRight(true);
         }
-        mover.interrupt();
     }
 
     @Override
