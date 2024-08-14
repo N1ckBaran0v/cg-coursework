@@ -31,7 +31,7 @@ public class ZBufferStrategy implements AbstractDrawStrategy {
             var color = background.mix(0);
             for (var j = 0; j < height; ++j) {
                 image.setPixel(i, j, color);
-                buffer[i][j] = Double.POSITIVE_INFINITY;
+                buffer[i][j] = 1.001;
             }
         }
         return buffer;

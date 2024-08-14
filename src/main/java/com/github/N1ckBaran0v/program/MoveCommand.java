@@ -1,6 +1,6 @@
 package com.github.N1ckBaran0v.program;
 
-public class MoveCommand extends Command {
+public class MoveCommand implements Command {
     private final double dx, dy, dz;
     private final String name;
 
@@ -12,7 +12,7 @@ public class MoveCommand extends Command {
     }
 
     @Override
-    void execute() {
+    public void execute(Context context) {
         var scene = context.getScene();
         var object = scene.getObject(name);
         object.move(dx, dy, dz);

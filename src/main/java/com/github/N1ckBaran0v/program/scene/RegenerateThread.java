@@ -26,9 +26,10 @@ class RegenerateThread extends Thread {
     @Override
     public void run() {
         generator.setGenerates(true);
+        var result = new HashMap2D<Long, Chunk>();
         for (var k = 0; k < listX.size(); ++k) {
-            var x = (long) (listX.get(k) / sideSize);
-            var z = (long) (listZ.get(k) / sideSize);
+            var x = (long) Math.floor(listX.get(k) / sideSize);
+            var z = (long) Math.floor(listZ.get(k) / sideSize);
             for (var i = x - maxChunks; i <= x + maxChunks; ++i) {
                 for (var j = z - maxChunks; j <= z + maxChunks; ++j) {
                     if (interrupted()) {
@@ -37,28 +38,19 @@ class RegenerateThread extends Thread {
                     if (!chunks.contains(i, j)) {
                         chunks.put(i, j, generator.generateChunk(i, j));
                     }
-                }
-            }
-        }
-        var result = new HashMap2D<Long, Chunk>();
-        for (var k = 0; k < listX.size(); ++k) {
-            var x = (long) (listX.get(k) / sideSize);
-            var z = (long) (listZ.get(k) / sideSize);
-            for (var i = x - maxChunks; i <= x + maxChunks; ++i) {
-                for (var j = z - maxChunks; j <= z + maxChunks; ++j) {
                     result.put(i, j, chunks.get(i, j));
                 }
             }
         }
-        for (var trio : result) {
-            chunks.remove(trio.first, trio.second);
-        }
-        for (var trio : chunks) {
-            if (interrupted()) {
-                return;
-            }
-            generator.removeChunk(result, trio.first, trio.second);
-        }
+//        for (var trio : result) {
+//            chunks.remove(trio.first, trio.second);
+//        }
+//        for (var trio : chunks) {
+//            if (interrupted()) {
+//                return;
+//            }
+//            generator.removeChunk(result, trio.first, trio.second);
+//        }
         if (interrupted()) {
             return;
         }

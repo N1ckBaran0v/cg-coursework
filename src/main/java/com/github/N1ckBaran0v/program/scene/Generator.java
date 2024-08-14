@@ -85,6 +85,9 @@ class Generator {
     private Vector4D getDot(long x, long z) {
         var dot = dotsMap.get(x, z);
         if (dot == null) {
+            if (generator.get(x, z) > 1 || generator.get(x, z) < 0) {
+                System.out.println("AHTUNG");
+            }
             var y = generator.get(x, z) * difference + minHeight;
             dot = new Vector4D(x, y, z);
             dotsMap.put(x, z, dot);
@@ -102,7 +105,7 @@ class Generator {
                 var near = getDot(x, z);
                 var far = getDot(xnext, znext);
                 result.add(new Polygon4D(near, getDot(xnext, z), far, new Vector4D(), getColor(gen)));
-                result.add(new Polygon4D(near, getDot(xnext, z), far, new Vector4D(), getColor(gen)));
+                result.add(new Polygon4D(near, getDot(x, znext), far, new Vector4D(), getColor(gen)));
             }
         }
         return result;

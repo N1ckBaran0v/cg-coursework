@@ -28,7 +28,10 @@ class CanvasPanel extends JPanel {
     @Override
     public void paint(Graphics g) {
         factory.setGraphics(this, g);
-        Facade.execute(drawCommand);
+        try {
+            Facade.execute(drawCommand);
+        } catch (Exception ignored) {
+        }
     }
 
     public CameraMover getMover() {

@@ -18,6 +18,8 @@ class PerlinNoise {
     }
 
     public double get(long x, long y) {
+        x = x > 0 ? x : -x;
+        y = y > 0 ? y : -y;
         var dx = x / sideSize + 0.314;
         var dy = y / sideSize + 0.159;
         var amplitude = 1.0;
@@ -48,7 +50,7 @@ class PerlinNoise {
     }
 
     private int hashFunc(int x, int y) {
-        return table[Objects.hash(x, y) % 512];
+        return table[Objects.hash(x, y) % TABLE_SIZE];
     }
 
     private double noise(double x, double y) {

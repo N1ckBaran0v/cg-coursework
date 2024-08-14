@@ -7,7 +7,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
-class Context {
+public class Context {
     private final Scene scene;
     private final Artist artist;
 

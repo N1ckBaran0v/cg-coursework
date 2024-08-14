@@ -10,7 +10,7 @@ public class HashMap2D<K, V> implements Map2D<K, V> {
     public HashMap2D() {
     }
 
-    public HashMap2D(HashMap2D<K, V> other) {
+    public HashMap2D(Map2D<K, V> other) {
         for (var trio : other) {
             put(trio.first, trio.second, trio.third);
         }
@@ -41,6 +41,9 @@ public class HashMap2D<K, V> implements Map2D<K, V> {
     @Override
     public void remove(K key1, K key2) {
         inner.get(key1).remove(key2);
+        if (inner.get(key1).isEmpty()) {
+            inner.remove(key1);
+        }
     }
 
     @Override
