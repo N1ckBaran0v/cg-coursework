@@ -22,7 +22,7 @@ public class LandscapeHolder {
 
     public static void setParams(long seed, double minHeight, double maxHeight, long sideSize, long step,
                                  long maxChunks) {
-        if (sideSize % step != 0) {
+        if (sideSize % step != 0 || minHeight > maxHeight) {
             throw new IllegalArgumentException("sideSize % step must be 0, not " + (sideSize % step));
         }
         landscape.setSeed(seed);

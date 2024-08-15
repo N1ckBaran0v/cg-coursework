@@ -16,7 +16,7 @@ public class MainApplication implements Runnable {
         Facade.setDrawFactory(factory);
         var panel = new CanvasPanel(factory);
         frame.setContentPane(panel);
-        Facade.execute(new LoadLandscapeCommand("src/main/resources/bebra.json"));
+        Facade.execute(new GenerateLandscapeCommand(-3, 0, 1024, 2048, 128, 8));
         Facade.execute(new AddObjectCommand("NotASun", "FarLight"));
         Facade.execute(new RotateCommand("NotASun", 45, 0, 45));
         frame.addKeyListener(new CameraKeyListener(panel.getMover()));

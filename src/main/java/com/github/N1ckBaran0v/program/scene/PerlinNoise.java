@@ -18,8 +18,8 @@ class PerlinNoise {
     }
 
     public double get(long x, long y) {
-        var dx = x / sideSize + 1000.314;
-        var dy = y / sideSize + 1000.159;
+        var dx = Math.abs(x / sideSize + 1000);
+        var dy = Math.abs(y / sideSize + 1000);
         var amplitude = 1.0;
         var maxval = 0.0;
         var result = 0.0;
