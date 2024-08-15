@@ -26,7 +26,7 @@ public class ZBufferStrategy implements AbstractDrawStrategy {
         var buffer = new double[width][];
         for (var i = 0; i < width; ++i) {
             buffer[i] = new double[height];
-            var color = 255 << 24;
+            var color = 0xff00ffff;
             for (var j = 0; j < height; ++j) {
                 image.setPixel(i, j, color);
                 buffer[i][j] = 1.001;
@@ -54,7 +54,11 @@ public class ZBufferStrategy implements AbstractDrawStrategy {
                     var z = d1.z * k1 + d2.z * k2 + d3.z * k3;
                     if (buffer[i][j] > z) {
                         buffer[i][j] = z;
+                        if (z > 0.9) {
+                            color.setAlpha((int) ((1 - z) * 2550));
+                        }
                         image.setPixel(i, j, color.mix(image.getPixel(i, j)));
+                        color.setAlpha(255);
                     }
                 }
             }

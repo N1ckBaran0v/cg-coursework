@@ -62,11 +62,15 @@ public class Color implements Cloneable {
         return alpha << 24 | r << 16 | g << 8 | b;
     }
 
+    public int getRGBWithBrightness() {
+        return alpha << 24 | ((int) (r * brightness)) << 16 | ((int) (g * brightness)) << 8 | ((int) (b * brightness));
+    }
+
     public double getBrightness() {
         return brightness;
     }
 
-    private void setAlpha(int alpha) {
+    public void setAlpha(int alpha) {
         this.alpha = checkParam(alpha);
     }
 
