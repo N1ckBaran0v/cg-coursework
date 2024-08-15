@@ -1,4 +1,4 @@
-package com.github.N1ckBaran0v.program.artist;
+package com.github.N1ckBaran0v.program.render;
 
 import com.github.N1ckBaran0v.program.containers.HashMap2D;
 import com.github.N1ckBaran0v.program.containers.Map2D;

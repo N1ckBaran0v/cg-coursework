@@ -42,19 +42,19 @@ class RegenerateThread extends Thread {
                 }
             }
         }
-//        for (var trio : result) {
-//            chunks.remove(trio.first, trio.second);
-//        }
-//        for (var trio : chunks) {
-//            if (interrupted()) {
-//                return;
-//            }
-//            generator.removeChunk(result, trio.first, trio.second);
-//        }
+        for (var trio : chunks) {
+            if (interrupted()) {
+                return;
+            }
+            if (!result.contains(trio.first, trio.second)) {
+                generator.removeChunk(chunks, trio.first, trio.second);
+            }
+        }
         if (interrupted()) {
             return;
         }
         landscape.setChunks(result);
+        landscape.setNeedRecalculate(true);
         generator.setGenerates(false);
     }
 }

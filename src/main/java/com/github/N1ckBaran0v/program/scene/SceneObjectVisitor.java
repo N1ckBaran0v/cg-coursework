@@ -12,4 +12,7 @@ public interface SceneObjectVisitor {
             obj.accept(this);
         }
     }
+
+    default void visit(FarLight light) {
+    }
 }

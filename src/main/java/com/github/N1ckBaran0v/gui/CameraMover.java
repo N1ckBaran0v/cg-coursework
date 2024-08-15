@@ -9,7 +9,7 @@ class CameraMover extends Thread {
     private final CanvasPanel panel;
     private boolean goUp, goDown, goForward, goBack, goLeft, goRight;
     private boolean lookUp, lookDown, lookLeft, lookRight;
-    private static final double STEP = 8;
+    private static final double STEP = 16;
     private static final double DEGREES = 1;
 
     public CameraMover(String cameraName, CanvasPanel panel) {

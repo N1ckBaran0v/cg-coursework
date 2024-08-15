@@ -1,4 +1,4 @@
-package com.github.N1ckBaran0v.program.artist;
+package com.github.N1ckBaran0v.program.render;
 
 import com.github.N1ckBaran0v.program.geometry.Color;
 import com.github.N1ckBaran0v.program.geometry.Vector3D;
@@ -24,11 +24,9 @@ public class ZBufferStrategy implements AbstractDrawStrategy {
         var width = image.getWidth();
         var height = image.getHeight();
         var buffer = new double[width][];
-        var background = new Color(0, 255, 255);
         for (var i = 0; i < width; ++i) {
             buffer[i] = new double[height];
-            background.setBrightness(1 - (float) i / width);
-            var color = background.mix(0);
+            var color = 255 << 24;
             for (var j = 0; j < height; ++j) {
                 image.setPixel(i, j, color);
                 buffer[i][j] = 1.001;

@@ -6,7 +6,7 @@ import java.util.Iterator;
 
 public class Landscape extends Composite {
     private Map2D<Long, Chunk> chunks;
-    public static final long SIDE_SIZE = 1024;
+    public static final long SIDE_SIZE = 2048;
     public long maxChunks = 1;
 
     @Override

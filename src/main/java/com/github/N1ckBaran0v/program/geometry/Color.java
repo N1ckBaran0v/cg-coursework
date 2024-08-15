@@ -5,7 +5,7 @@ public class Color implements Cloneable {
     private final int g;
     private final int b;
     private int alpha;
-    private float brightness;
+    private double brightness;
     private static final int MIN_VAL = 0;
     private static final int MAX_VAL = 255;
     private static final float MIN_BRIGHTNESS = 0;
@@ -27,7 +27,7 @@ public class Color implements Cloneable {
         this(r, g, b, MAX_VAL, MAX_BRIGHTNESS);
     }
 
-    public Color(int r, int g, int b, float brightness) {
+    public Color(int r, int g, int b, double brightness) {
         this(r, g, b, MAX_VAL, brightness);
     }
 
@@ -35,7 +35,7 @@ public class Color implements Cloneable {
         this(r, g, b, alpha, MAX_BRIGHTNESS);
     }
 
-    public Color(int r, int g, int b, int alpha, float brightness) {
+    public Color(int r, int g, int b, int alpha, double brightness) {
         this.r = checkParam(r);
         this.g = checkParam(g);
         this.b = checkParam(b);
@@ -52,7 +52,7 @@ public class Color implements Cloneable {
         return param;
     }
 
-    public void setBrightness(float brightness) {
+    public void setBrightness(double brightness) {
         if (brightness > MAX_BRIGHTNESS) {
             this.brightness = MAX_BRIGHTNESS;
         } else if (brightness < MIN_BRIGHTNESS) {
@@ -66,7 +66,7 @@ public class Color implements Cloneable {
         return alpha << 24 | r << 16 | g << 8 | b;
     }
 
-    public float getBrightness() {
+    public double getBrightness() {
         return brightness;
     }
 

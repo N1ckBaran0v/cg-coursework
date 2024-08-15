@@ -8,7 +8,6 @@ import com.github.N1ckBaran0v.program.geometry.Vector4D;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 class Generator {
     private Map2D<Long, Vector4D> dotsMap;
@@ -85,9 +84,6 @@ class Generator {
     private Vector4D getDot(long x, long z) {
         var dot = dotsMap.get(x, z);
         if (dot == null) {
-            if (generator.get(x, z) > 1 || generator.get(x, z) < 0) {
-                System.out.println("AHTUNG");
-            }
             var y = generator.get(x, z) * difference + minHeight;
             dot = new Vector4D(x, y, z);
             dotsMap.put(x, z, dot);
@@ -97,22 +93,27 @@ class Generator {
 
     private List<Polygon4D> generatePolygons(long x0, long z0, long x1, long z1) {
         var result = new ArrayList<Polygon4D>();
-        var gen = new Random();
         for (var x = x0; x < x1; x += step) {
             var xnext = x + step;
             for (var z = z0; z < z1; z += step) {
                 var znext = z + step;
                 var near = getDot(x, z);
                 var far = getDot(xnext, znext);
-                result.add(new Polygon4D(near, getDot(xnext, z), far, new Vector4D(), getColor(gen)));
-                result.add(new Polygon4D(near, getDot(x, znext), far, new Vector4D(), getColor(gen)));
+                var dx = getDot(xnext, z);
+                var dz = getDot(x, znext);
+                var normal1 = Vector4D.getNormal(near, dx, far);
+                if (normal1.y < 0) {
+                    normal1.inverse();
+                }
+                var normal2 = Vector4D.getNormal(near, dz, far);
+                if (normal2.y < 0) {
+                    normal2.inverse();
+                }
+                result.add(new Polygon4D(near, dx, far, normal1, new Color(0, 255, 0)));
+                result.add(new Polygon4D(near, dz, far, normal2, new Color(0, 192, 0)));
             }
         }
         return result;
-    }
-
-    private Color getColor(Random gen) {
-        return new Color(gen.nextInt(256), gen.nextInt(256), gen.nextInt(256));
     }
 
     public boolean isGenerates() {

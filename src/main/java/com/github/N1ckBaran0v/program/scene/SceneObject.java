@@ -6,6 +6,7 @@ import javax.naming.OperationNotSupportedException;
 
 abstract public class SceneObject {
     private final Vector4D center;
+    private boolean needRecalculate;
 
     protected SceneObject() {
         this.center = new Vector4D();
@@ -32,4 +33,12 @@ abstract public class SceneObject {
     }
 
     abstract public void accept(SceneObjectVisitor visitor);
+
+    public boolean isNeedRecalculate() {
+        return needRecalculate;
+    }
+
+    public void setNeedRecalculate(boolean needRecalculate) {
+        this.needRecalculate = needRecalculate;
+    }
 }

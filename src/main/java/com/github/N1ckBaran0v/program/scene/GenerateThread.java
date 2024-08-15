@@ -41,6 +41,7 @@ class GenerateThread extends Thread {
             return;
         }
         landscape.setChunks(map);
+        landscape.setNeedRecalculate(true);
         generator.setGenerates(false);
     }
 }
