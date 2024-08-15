@@ -5,9 +5,10 @@ import com.github.N1ckBaran0v.program.containers.Map2D;
 import java.util.Iterator;
 
 public class Landscape extends Composite {
-    private Map2D<Long, Chunk> chunks;
-    public static final long SIDE_SIZE = 2048;
-    public long maxChunks = 1;
+    private transient Map2D<Long, Chunk> chunks;
+    private long seed = 0;
+    private double minHeight = 0, maxHeight = 0;
+    private long sideSize = 1000, step = 100, maxChunks = 1;
 
     @Override
     public Iterator<SceneObject> iterator() {
@@ -23,5 +24,53 @@ public class Landscape extends Composite {
 
     public void setChunks(Map2D<Long, Chunk> chunks) {
         this.chunks = chunks;
+    }
+
+    public long getSeed() {
+        return seed;
+    }
+
+    public void setSeed(long seed) {
+        this.seed = seed;
+    }
+
+    public double getMinHeight() {
+        return minHeight;
+    }
+
+    public void setMinHeight(double minHeight) {
+        this.minHeight = minHeight;
+    }
+
+    public double getMaxHeight() {
+        return maxHeight;
+    }
+
+    public void setMaxHeight(double maxHeight) {
+        this.maxHeight = maxHeight;
+    }
+
+    public long getSideSize() {
+        return sideSize;
+    }
+
+    public void setSideSize(long sideSize) {
+        this.sideSize = sideSize;
+    }
+
+    public long getStep() {
+        return step;
+    }
+
+    public void setStep(long step) {
+        this.step = step;
+    }
+
+    public long getMaxChunks() {
+        return maxChunks;
+    }
+
+    public void setMaxChunks(long maxChunks) {
+        this.maxChunks = maxChunks;
     }
 }

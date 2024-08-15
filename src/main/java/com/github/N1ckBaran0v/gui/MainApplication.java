@@ -1,9 +1,6 @@
 package com.github.N1ckBaran0v.gui;
 
-import com.github.N1ckBaran0v.program.AddObjectCommand;
-import com.github.N1ckBaran0v.program.Facade;
-import com.github.N1ckBaran0v.program.GenerateLandscapeCommand;
-import com.github.N1ckBaran0v.program.RotateCommand;
+import com.github.N1ckBaran0v.program.*;
 import com.github.N1ckBaran0v.swingAdapters.SwingFactory;
 
 import javax.swing.*;
@@ -19,7 +16,7 @@ public class MainApplication implements Runnable {
         Facade.setDrawFactory(factory);
         var panel = new CanvasPanel(factory);
         frame.setContentPane(panel);
-        Facade.execute(new GenerateLandscapeCommand(0, 0, 1024, 128, 8));
+        Facade.execute(new LoadLandscapeCommand("src/main/resources/bebra.json"));
         Facade.execute(new AddObjectCommand("NotASun", "FarLight"));
         Facade.execute(new RotateCommand("NotASun", 45, 0, 45));
         frame.addKeyListener(new CameraKeyListener(panel.getMover()));

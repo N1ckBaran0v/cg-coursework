@@ -17,12 +17,13 @@ class LandscapeCheckerVisitor implements SceneObjectVisitor {
         var position = camera.getCenter();
         listX.add(position.x);
         listZ.add(position.z);
-        var x = (long) (position.x / landscape.SIDE_SIZE);
-        var z = (long) (position.z / landscape.SIDE_SIZE);
+        var x = (long) (position.x / landscape.getSideSize());
+        var z = (long) (position.z / landscape.getSideSize());
         var map = landscape.getChunks();
         cycle: {
-            for (var i = x - landscape.maxChunks; i <= x + landscape.maxChunks; ++i) {
-                for (var j = z - landscape.maxChunks; j <= z + landscape.maxChunks; ++j) {
+            var maxChunks = landscape.getMaxChunks();
+            for (var i = x - maxChunks; i <= x + maxChunks; ++i) {
+                for (var j = z - maxChunks; j <= z + maxChunks; ++j) {
                     if (!map.contains(i, j)) {
                         needRegenerate = true;
                         break cycle;

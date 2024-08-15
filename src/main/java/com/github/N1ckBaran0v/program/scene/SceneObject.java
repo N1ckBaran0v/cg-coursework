@@ -5,8 +5,8 @@ import com.github.N1ckBaran0v.program.geometry.Vector4D;
 import javax.naming.OperationNotSupportedException;
 
 abstract public class SceneObject {
-    private final Vector4D center;
-    private boolean needRecalculate;
+    private final transient Vector4D center;
+    private transient boolean needRecalculate;
 
     protected SceneObject() {
         this.center = new Vector4D();

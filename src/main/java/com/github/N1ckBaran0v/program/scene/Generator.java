@@ -16,17 +16,13 @@ class Generator {
     private long sideSize, step;
     private boolean isGenerates;
 
-    public Generator() {
-        setParams(0, 0, 0, 1, 1);
-    }
-
-    public void setParams(long seed, double minHeight, double maxHeight, long sideSize, long step) {
-        this.generator = new PerlinNoise(seed, sideSize);
-        this.minHeight = minHeight;
-        this.difference = maxHeight - minHeight;
-        this.sideSize = sideSize;
-        this.step = step;
-        this.dotsMap = new HashMap2D<>();
+    public void setParams(Landscape landscape) {
+        generator = new PerlinNoise(landscape.getSeed(), sideSize);
+        minHeight = landscape.getMinHeight();
+        difference = landscape.getMaxHeight() - minHeight;
+        sideSize = landscape.getSideSize();
+        step = landscape.getStep();
+        dotsMap = new HashMap2D<>();
     }
 
     public Chunk generateChunk(long i, long j) {

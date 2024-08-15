@@ -18,7 +18,7 @@ class CheckRegenerateNecessity implements Command {
         }
         if (visitor.isNeedRegenerate()) {
             var thread = new RegenerateThread(LandscapeHolder.getGenerator(), visitor.getListX(), visitor.getListZ(),
-                    landscape.SIDE_SIZE, landscape.maxChunks, new HashMap2D<Long, Chunk>(landscape.getChunks()), landscape);
+                    landscape);
             LandscapeHolder.setThread(thread);
             thread.start();
         }
