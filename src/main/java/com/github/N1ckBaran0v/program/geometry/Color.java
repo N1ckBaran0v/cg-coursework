@@ -12,11 +12,7 @@ public class Color implements Cloneable {
     private static final float MAX_BRIGHTNESS = 1;
 
     public Color() {
-        this.r = MAX_VAL;
-        this.g = MAX_VAL;
-        this.b = MAX_VAL;
-        this.alpha = MAX_VAL;
-        this.brightness = MAX_BRIGHTNESS;
+        this(MAX_VAL, MAX_VAL, MAX_VAL, MAX_VAL, MAX_BRIGHTNESS);
     }
 
     public Color(Color other) {
