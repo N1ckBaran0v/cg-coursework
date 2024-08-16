@@ -1,22 +1,18 @@
 package com.github.N1ckBaran0v.program.geometry;
 
-public class Color {
+public class Color implements Cloneable {
     private final int r;
     private final int g;
     private final int b;
     private int alpha;
-    private float brightness;
+    private double brightness;
     private static final int MIN_VAL = 0;
     private static final int MAX_VAL = 255;
     private static final float MIN_BRIGHTNESS = 0;
     private static final float MAX_BRIGHTNESS = 1;
 
     public Color() {
-        this.r = MAX_VAL;
-        this.g = MAX_VAL;
-        this.b = MAX_VAL;
-        this.alpha = MAX_VAL;
-        this.brightness = MAX_BRIGHTNESS;
+        this(MAX_VAL, MAX_VAL, MAX_VAL, MAX_VAL, MAX_BRIGHTNESS);
     }
 
     public Color(Color other) {
@@ -27,7 +23,7 @@ public class Color {
         this(r, g, b, MAX_VAL, MAX_BRIGHTNESS);
     }
 
-    public Color(int r, int g, int b, float brightness) {
+    public Color(int r, int g, int b, double brightness) {
         this(r, g, b, MAX_VAL, brightness);
     }
 
@@ -35,7 +31,7 @@ public class Color {
         this(r, g, b, alpha, MAX_BRIGHTNESS);
     }
 
-    public Color(int r, int g, int b, int alpha, float brightness) {
+    public Color(int r, int g, int b, int alpha, double brightness) {
         this.r = checkParam(r);
         this.g = checkParam(g);
         this.b = checkParam(b);
@@ -52,7 +48,7 @@ public class Color {
         return param;
     }
 
-    public void setBrightness(float brightness) {
+    public void setBrightness(double brightness) {
         if (brightness > MAX_BRIGHTNESS) {
             this.brightness = MAX_BRIGHTNESS;
         } else if (brightness < MIN_BRIGHTNESS) {
@@ -66,11 +62,15 @@ public class Color {
         return alpha << 24 | r << 16 | g << 8 | b;
     }
 
-    public float getBrightness() {
+    public int getRGBWithBrightness() {
+        return alpha << 24 | ((int) (r * brightness)) << 16 | ((int) (g * brightness)) << 8 | ((int) (b * brightness));
+    }
+
+    public double getBrightness() {
         return brightness;
     }
 
-    private void setAlpha(int alpha) {
+    public void setAlpha(int alpha) {
         this.alpha = checkParam(alpha);
     }
 
@@ -84,5 +84,10 @@ public class Color {
         var g1 = (int) (((other >> 8) & 0xff) * transparency);
         var b1 = (int) ((other & 0xff) * transparency);
         return MAX_VAL << 24 | (r0 + r1) << 16 | (g0 + g1) << 8 | (b0 + b1);
+    }
+
+    @Override
+    public Color clone() {
+        return new Color(r, g, b, alpha, brightness);
     }
 }

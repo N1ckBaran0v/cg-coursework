@@ -1,4 +1,4 @@
-package com.github.N1ckBaran0v.program.artist;
+package com.github.N1ckBaran0v.program.render;
 
 import dagger.Binds;
 import dagger.Module;
@@ -6,10 +6,10 @@ import dagger.Module;
 import javax.inject.Singleton;
 
 @Module
-public interface ArtistModule {
+public interface RenderModule {
     @Binds
     @Singleton
-    Artist bindArtist(ArtistImplementation artistImplementation);
+    Render bindArtist(RenderImplementation artistImplementation);
 
     @Binds
     DrawStrategyCreator bindDrawStrategyCreator(ZBufferStrategyCreator zBufferStrategyCreator);

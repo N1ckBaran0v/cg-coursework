@@ -1,4 +1,4 @@
-package com.github.N1ckBaran0v.program.artist;
+package com.github.N1ckBaran0v.program.render;
 
 import com.github.N1ckBaran0v.program.geometry.Color;
 import com.github.N1ckBaran0v.program.geometry.Vector3D;

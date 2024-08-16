@@ -1,17 +1,17 @@
-package com.github.N1ckBaran0v.program.artist;
+package com.github.N1ckBaran0v.program.render;
 
 import com.github.N1ckBaran0v.program.geometry.Color;
 import com.github.N1ckBaran0v.program.geometry.Vector3D;
 import com.github.N1ckBaran0v.program.guiAdapters.AbstractImage;
 
-public class ZBufferStrategy implements AbstractDrawStrategy {
+class ZBufferStrategy implements AbstractDrawStrategy {
     private final AbstractImage image;
     private final double[][] buffer;
     private final double xmin, ymin, xmax, ymax;
 
-    public ZBufferStrategy(AbstractImage image) {
+    public ZBufferStrategy(AbstractImage image, Color background) {
         this.image = image;
-        buffer = createZBuffer(image);
+        buffer = createZBuffer(image, background);
         var width = image.getWidth();
         var height = image.getHeight();
         xmin = 0;
@@ -20,18 +20,16 @@ public class ZBufferStrategy implements AbstractDrawStrategy {
         ymin = 0;
     }
 
-    private double[][] createZBuffer(AbstractImage image) {
+    private double[][] createZBuffer(AbstractImage image, Color background) {
         var width = image.getWidth();
         var height = image.getHeight();
         var buffer = new double[width][];
-        var background = new Color(0, 255, 255);
+        var color = background.getRGBWithBrightness();
         for (var i = 0; i < width; ++i) {
             buffer[i] = new double[height];
-            background.setBrightness(1 - (float) i / width);
-            var color = background.mix(0);
             for (var j = 0; j < height; ++j) {
                 image.setPixel(i, j, color);
-                buffer[i][j] = Double.POSITIVE_INFINITY;
+                buffer[i][j] = 1.001;
             }
         }
         return buffer;
@@ -56,7 +54,11 @@ public class ZBufferStrategy implements AbstractDrawStrategy {
                     var z = d1.z * k1 + d2.z * k2 + d3.z * k3;
                     if (buffer[i][j] > z) {
                         buffer[i][j] = z;
+                        if (z > 0.9) {
+                            color.setAlpha((int) ((1 - z) * 2550));
+                        }
                         image.setPixel(i, j, color.mix(image.getPixel(i, j)));
+                        color.setAlpha(255);
                     }
                 }
             }

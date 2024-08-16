@@ -11,6 +11,7 @@ class SceneImplementation implements Scene {
 
     @Inject
     public SceneImplementation() {
+        addObject("Landscape", LandscapeHolder.getInstance());
     }
 
     @Override

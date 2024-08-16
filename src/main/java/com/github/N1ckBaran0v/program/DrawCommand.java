@@ -1,6 +1,6 @@
 package com.github.N1ckBaran0v.program;
 
-public class DrawCommand extends Command {
+public class DrawCommand implements Command {
     private final String cameraName;
 
     public DrawCommand(String cameraName) {
@@ -8,7 +8,7 @@ public class DrawCommand extends Command {
     }
 
     @Override
-    void execute() {
+    public void execute(Context context) {
         var artist = context.getArtist();
         artist.draw(cameraName);
     }

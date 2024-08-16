@@ -5,7 +5,8 @@ import com.github.N1ckBaran0v.program.geometry.Vector4D;
 import javax.naming.OperationNotSupportedException;
 
 abstract public class SceneObject {
-    private final Vector4D center;
+    private final transient Vector4D center;
+    private transient boolean needRecalculate;
 
     protected SceneObject() {
         this.center = new Vector4D();
@@ -23,9 +24,21 @@ abstract public class SceneObject {
         throw new RuntimeException(new OperationNotSupportedException());
     }
 
+    public void setPosition(double x, double y, double z) {
+        center.set(x, y, z);
+    }
+
     public Vector4D getCenter() {
         return center;
     }
 
     abstract public void accept(SceneObjectVisitor visitor);
+
+    public boolean isNeedRecalculate() {
+        return needRecalculate;
+    }
+
+    public void setNeedRecalculate(boolean needRecalculate) {
+        this.needRecalculate = needRecalculate;
+    }
 }

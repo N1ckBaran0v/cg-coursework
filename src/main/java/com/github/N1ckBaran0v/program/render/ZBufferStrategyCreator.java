@@ -1,5 +1,6 @@
-package com.github.N1ckBaran0v.program.artist;
+package com.github.N1ckBaran0v.program.render;
 
+import com.github.N1ckBaran0v.program.geometry.Color;
 import com.github.N1ckBaran0v.program.guiAdapters.AbstractImage;
 
 import javax.inject.Inject;
@@ -10,7 +11,7 @@ public class ZBufferStrategyCreator implements DrawStrategyCreator {
     }
 
     @Override
-    public AbstractDrawStrategy create(AbstractImage image) {
-        return new ZBufferStrategy(image);
+    public AbstractDrawStrategy create(AbstractImage image, Color color) {
+        return new ZBufferStrategy(image, color);
     }
 }

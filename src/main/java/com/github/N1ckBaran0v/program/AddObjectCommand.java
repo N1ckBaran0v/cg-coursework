@@ -1,6 +1,6 @@
 package com.github.N1ckBaran0v.program;
 
-public class AddObjectCommand extends Command {
+public class AddObjectCommand implements Command {
     private final String name;
     private final String type;
 
@@ -10,7 +10,7 @@ public class AddObjectCommand extends Command {
     }
 
     @Override
-    void execute() {
+    public void execute(Context context) {
         var scene = context.getScene();
         var object = scene.createObject(type);
         scene.addObject(name, object);
