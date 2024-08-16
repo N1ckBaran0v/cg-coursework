@@ -4,6 +4,7 @@ import com.github.N1ckBaran0v.program.Facade;
 import com.github.N1ckBaran0v.program.SaveLandscapeCommand;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -17,6 +18,7 @@ class SaveActionListener implements ActionListener {
         chooser.setDialogTitle("Сохранение параметров");
         chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         chooser.setCurrentDirectory(new File(PATH));
+        chooser.setFileFilter(new FileNameExtensionFilter("JSON files", "json"));
         var result = chooser.showSaveDialog(null);
         if (result == JFileChooser.APPROVE_OPTION) {
             var flag = chooser.getSelectedFile().exists();

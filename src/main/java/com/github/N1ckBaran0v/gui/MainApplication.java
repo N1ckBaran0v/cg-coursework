@@ -92,6 +92,14 @@ public class MainApplication implements Runnable {
             }
         });
         menu.add(author);
+        var exit = new JMenuItem("Выход");
+        exit.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                System.exit(0);
+            }
+        });
+        menu.add(exit);
         menuBar.add(menu);
         frame.setJMenuBar(menuBar);
     }
