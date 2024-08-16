@@ -1,6 +1,5 @@
 package com.github.N1ckBaran0v.gui;
 
-import javax.swing.plaf.synth.SynthOptionPaneUI;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 

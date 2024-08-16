@@ -2,7 +2,6 @@ package com.github.N1ckBaran0v.program.scene;
 
 import com.github.N1ckBaran0v.program.Command;
 import com.github.N1ckBaran0v.program.Context;
-import com.github.N1ckBaran0v.program.containers.HashMap2D;
 
 class CheckRegenerateNecessity implements Command {
     @Override
