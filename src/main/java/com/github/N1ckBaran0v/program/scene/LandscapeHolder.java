@@ -50,6 +50,9 @@ public class LandscapeHolder {
     }
 
     public static void save(String filename) {
+        if (landscape.getChunks() == null) {
+            throw new NullPointerException();
+        }
         var gson = new Gson();
         var data = gson.toJson(landscape);
         try (var writer = Files.newBufferedWriter(Path.of(filename))) {

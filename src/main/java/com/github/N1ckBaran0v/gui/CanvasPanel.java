@@ -23,6 +23,8 @@ class CanvasPanel extends JPanel {
         drawCommand = new DrawCommand(cameraName);
         mover = new CameraMover(cameraName, this);
         mover.start();
+        addMouseListener(new CanvasMouseListener(this));
+        addKeyListener(new CameraKeyListener(mover));
     }
 
     @Override
@@ -32,13 +34,5 @@ class CanvasPanel extends JPanel {
             Facade.execute(drawCommand);
         } catch (Exception ignored) {
         }
-    }
-
-    public CameraMover getMover() {
-        return mover;
-    }
-
-    public String getCameraName() {
-        return cameraName;
     }
 }

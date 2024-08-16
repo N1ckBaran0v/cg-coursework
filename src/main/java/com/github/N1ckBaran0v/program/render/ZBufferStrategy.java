@@ -4,14 +4,14 @@ import com.github.N1ckBaran0v.program.geometry.Color;
 import com.github.N1ckBaran0v.program.geometry.Vector3D;
 import com.github.N1ckBaran0v.program.guiAdapters.AbstractImage;
 
-public class ZBufferStrategy implements AbstractDrawStrategy {
+class ZBufferStrategy implements AbstractDrawStrategy {
     private final AbstractImage image;
     private final double[][] buffer;
     private final double xmin, ymin, xmax, ymax;
 
-    public ZBufferStrategy(AbstractImage image) {
+    public ZBufferStrategy(AbstractImage image, Color background) {
         this.image = image;
-        buffer = createZBuffer(image);
+        buffer = createZBuffer(image, background);
         var width = image.getWidth();
         var height = image.getHeight();
         xmin = 0;
@@ -20,13 +20,13 @@ public class ZBufferStrategy implements AbstractDrawStrategy {
         ymin = 0;
     }
 
-    private double[][] createZBuffer(AbstractImage image) {
+    private double[][] createZBuffer(AbstractImage image, Color background) {
         var width = image.getWidth();
         var height = image.getHeight();
         var buffer = new double[width][];
+        var color = background.getRGBWithBrightness();
         for (var i = 0; i < width; ++i) {
             buffer[i] = new double[height];
-            var color = 0xff00ffff;
             for (var j = 0; j < height; ++j) {
                 image.setPixel(i, j, color);
                 buffer[i][j] = 1.001;

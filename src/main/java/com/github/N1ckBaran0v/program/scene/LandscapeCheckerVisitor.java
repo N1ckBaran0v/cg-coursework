@@ -14,6 +14,9 @@ class LandscapeCheckerVisitor implements SceneObjectVisitor {
 
     @Override
     public void visit(Camera camera) {
+        if (landscape.getChunks() == null) {
+            return;
+        }
         var position = camera.getCenter();
         listX.add(position.x);
         listZ.add(position.z);

@@ -25,10 +25,10 @@ class TransformVisitor implements SceneObjectVisitor {
     private final List<Vector4D> maybeVisible = new ArrayList<>();
     private final List<Vector3D> dotList = new ArrayList<>();
 
-    public TransformVisitor(Camera camera, DrawStrategyCreator drawStrategyCreator, AbstractImage image) {
+    public TransformVisitor(Camera camera, DrawStrategyCreator drawStrategyCreator, AbstractImage image, Color color) {
         center = camera.getCenter();
         focus = camera.getFocus();
-        drawStrategy = drawStrategyCreator.create(image);
+        drawStrategy = drawStrategyCreator.create(image, color);
         cameraMatrix = camera.getTransformMatrix();
         var frustum = new Frustum(image, focus, camera.getVisibility());
         frustumMatrix = frustum.getTransformMatrix();
