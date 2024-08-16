@@ -50,11 +50,23 @@ public class MainApplication implements Runnable {
     private void addMenuBar(JFrame frame) {
         var menuBar = new JMenuBar();
         var menu = new JMenu("Информация");
-        var info = new JMenuItem("Программа");
+        var info = new JMenuItem("О программе");
         info.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                JOptionPane.showMessageDialog(null, "Курсовая работа по теме \"Генерация ландшафта\"",
+                var sb = new StringBuilder();
+                sb.append("Курсовая работа по теме \"Генерация ландшафта\".");
+                sb.append("\nПрограмма генерирует ландшафт по заданным параметрам.");
+                sb.append("\nКлюч генерации - целое число, необходимое для настройки генератора.");
+                sb.append("\nОставьте это поле пустым для применения случайного ключа генерации.");
+                sb.append("\nМинимальная и максимальная высоты - 2 вещественных числа, задающие диапазон высот ландшафта.");
+                sb.append("\nРазмер квадрата - натуральное число, задающее размер стороны квадрата генерации.");
+                sb.append("\nШаг отрисовки - натуральное число, задающее размер стороны полигонов.");
+                sb.append("\nДальность прорисовки - натуральное число, задающее дальность видимости (в квадратах).");
+                sb.append("\nТакже в программе присутствуют источник света и камера.");
+                sb.append("\nПро управление камерой можно прочитать в соответствующем разделе.");
+                sb.append("\nВектор направления источника света задается двумя углами.");
+                JOptionPane.showMessageDialog(null, sb.toString(),
                         "Информация о программе", JOptionPane.INFORMATION_MESSAGE);
             }
         });
@@ -83,7 +95,7 @@ public class MainApplication implements Runnable {
             }
         });
         menu.add(camera);
-        var author = new JMenuItem("Автор");
+        var author = new JMenuItem("Об авторе");
         author.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
