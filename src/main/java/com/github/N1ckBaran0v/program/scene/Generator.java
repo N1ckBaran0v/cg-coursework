@@ -108,7 +108,7 @@ class Generator {
                 normal1.normalize();
                 normal2.normalize();
                 result.add(new Polygon4D(near, dx, far, normal1, new Color(0, 255, 0)));
-                result.add(new Polygon4D(near, dz, far, normal2, new Color(0, 192, 0)));
+                result.add(new Polygon4D(near, dz, far, normal2, new Color(0, 255, 0)));
             }
         }
         return result;

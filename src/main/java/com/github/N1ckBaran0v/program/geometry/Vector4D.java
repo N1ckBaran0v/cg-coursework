@@ -45,6 +45,12 @@ public class Vector4D {
         this.z = z;
     }
 
+    public void divide(double d) {
+        this.x /= d;
+        this.y /= d;
+        this.z /= d;
+    }
+
     public static Vector4D getNormal(Vector4D a, Vector4D b, Vector4D c) {
         var result = vectorMultiply(Vector4D.sub(a, b), Vector4D.sub(b, c));
         result.normalize();
@@ -76,7 +82,7 @@ public class Vector4D {
         return x * other.x + y * other.y + z * other.z;
     }
 
-    public Vector3D toVector3D() {
-        return new Vector3D(x / w, y / w, z / w);
+    public Vector3D toVector3D(double brightness) {
+        return new Vector3D(x / w, y / w, z / w, brightness);
     }
 }

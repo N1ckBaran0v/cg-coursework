@@ -8,26 +8,28 @@ import com.github.N1ckBaran0v.program.scene.Camera;
 import com.github.N1ckBaran0v.program.scene.PolygonalModel;
 import com.github.N1ckBaran0v.program.scene.SceneObjectVisitor;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 class TransformVisitor implements SceneObjectVisitor {
     private final Vector4D center;
     private final AbstractDrawStrategy drawStrategy;
     private final Matrix4D cameraMatrix, frustumMatrix;
     private final double focus;
+    private final Map<Vector4D, Double> brightnesses;
     private final Map<Vector4D, Vector4D> transformed = new HashMap<>();
+    private final Map<Vector4D, Vector4D> reverse = new HashMap<>();
     private final Map<Vector4D, Vector3D> formatted = new HashMap<>();
+    private final Set<Vector4D> created = new HashSet<>();
     private final Map2D<Vector4D, Vector4D> intersection = new HashMap2D<>();
     private final List<Vector4D> invalid = new ArrayList<>();
     private final List<Vector4D> maybeVisible = new ArrayList<>();
     private final List<Vector3D> dotList = new ArrayList<>();
 
-    public TransformVisitor(Camera camera, DrawStrategyCreator drawStrategyCreator, AbstractImage image, Color color) {
+    public TransformVisitor(Camera camera, DrawStrategyCreator drawStrategyCreator, AbstractImage image, Color color,
+                            Map<Vector4D, Double> brightnesses) {
         center = camera.getCenter();
         focus = camera.getFocus();
+        this.brightnesses = brightnesses;
         drawStrategy = drawStrategyCreator.create(image, color);
         cameraMatrix = camera.getTransformMatrix();
         var frustum = new Frustum(image, focus, camera.getVisibility());
@@ -41,6 +43,12 @@ class TransformVisitor implements SceneObjectVisitor {
         }
     }
 
+    public void removeCreated() {
+        for (var dot : created) {
+            brightnesses.remove(dot);
+        }
+    }
+
     private void drawPolygon(Polygon4D polygon) {
         for (var elem : polygon) {
             var dot = transformed.get(elem);
@@ -49,6 +57,7 @@ class TransformVisitor implements SceneObjectVisitor {
                 cameraMatrix.transformVector(dot);
                 frustumMatrix.transformVector(dot);
                 transformed.put(elem, dot);
+                reverse.put(dot, elem);
             }
             if (dot.w >= focus) {
                 maybeVisible.add(dot);
@@ -78,6 +87,8 @@ class TransformVisitor implements SceneObjectVisitor {
             result = new Vector4D(b.x + (a.x - b.x) * t, b.y + (a.y - b.y) * t, 0);
             result.w = focus;
             intersection.put(a, b, result);
+            brightnesses.put(result, (brightnesses.get(reverse.get(a)) + brightnesses.get(reverse.get(b))) / 2);
+            created.add(result);
         }
         return result;
     }
@@ -85,7 +96,7 @@ class TransformVisitor implements SceneObjectVisitor {
     private Vector3D getFormattedDot(Vector4D dot) {
         var formattedDot = formatted.get(dot);
         if (formattedDot == null) {
-            formattedDot = dot.toVector3D();
+            formattedDot = dot.toVector3D(brightnesses.get(reverse.getOrDefault(dot, dot)));
             formatted.put(dot, formattedDot);
         }
         return formattedDot;
