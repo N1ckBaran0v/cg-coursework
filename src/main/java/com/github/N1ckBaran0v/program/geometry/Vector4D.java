@@ -76,7 +76,7 @@ public class Vector4D {
         return x * other.x + y * other.y + z * other.z;
     }
 
-    public Vector3D toVector3D() {
-        return new Vector3D(x / w, y / w, z / w);
+    public Vector3D toVector3D(double brightness) {
+        return new Vector3D(x / w, y / w, z / w, brightness);
     }
 }

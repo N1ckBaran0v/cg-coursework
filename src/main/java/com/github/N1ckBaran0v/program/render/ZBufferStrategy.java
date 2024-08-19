@@ -57,6 +57,8 @@ class ZBufferStrategy implements AbstractDrawStrategy {
                         if (z > 0.9) {
                             color.setAlpha((int) ((1 - z) * 2550));
                         }
+                        var brightness = d1.brightness * k1 + d2.brightness * k2 + d3.brightness * k3;
+                        color.setBrightness(brightness);
                         image.setPixel(i, j, color.mix(image.getPixel(i, j)));
                         color.setAlpha(255);
                     }
