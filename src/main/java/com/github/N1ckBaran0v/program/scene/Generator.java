@@ -2,15 +2,13 @@ package com.github.N1ckBaran0v.program.scene;
 
 import com.github.N1ckBaran0v.program.containers.HashMap2D;
 import com.github.N1ckBaran0v.program.containers.Map2D;
-import com.github.N1ckBaran0v.program.geometry.Color;
-import com.github.N1ckBaran0v.program.geometry.Polygon4D;
-import com.github.N1ckBaran0v.program.geometry.Vector4D;
+import com.github.N1ckBaran0v.program.geometry.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 class Generator {
-    private Map2D<Long, Vector4D> dotsMap;
+    private Map2D<Long, PolygonVector> dotsMap;
     private double minHeight, difference;
     private PerlinNoise generator;
     private long sideSize, step;
@@ -77,18 +75,18 @@ class Generator {
         }
     }
 
-    private Vector4D getDot(long x, long z) {
+    private PolygonVector getDot(long x, long z) {
         var dot = dotsMap.get(x, z);
         if (dot == null) {
             var y = generator.get(x, z) * difference + minHeight;
-            dot = new Vector4D(x, y, z);
+            dot = new PolygonVector(x, y, z);
             dotsMap.put(x, z, dot);
         }
         return dot;
     }
 
-    private List<Polygon4D> generatePolygons(long x0, long z0, long x1, long z1) {
-        var result = new ArrayList<Polygon4D>();
+    private List<Polygon> generatePolygons(long x0, long z0, long x1, long z1) {
+        var result = new ArrayList<Polygon>();
         for (var x = x0; x < x1; x += step) {
             var xnext = x + step;
             for (var z = z0; z < z1; z += step) {
@@ -97,18 +95,18 @@ class Generator {
                 var far = getDot(xnext, znext);
                 var dx = getDot(xnext, z);
                 var dz = getDot(x, znext);
-                var normal1 = Vector4D.getNormal(near, dx, far);
+                var normal1 = Vector3D.getNormal(near, dx, far);
                 if (normal1.y < 0) {
                     normal1.inverse();
                 }
-                var normal2 = Vector4D.getNormal(near, dz, far);
+                var normal2 = Vector3D.getNormal(near, dz, far);
                 if (normal2.y < 0) {
                     normal2.inverse();
                 }
                 normal1.normalize();
                 normal2.normalize();
-                result.add(new Polygon4D(near, dx, far, normal1, new Color(0, 255, 0)));
-                result.add(new Polygon4D(near, dz, far, normal2, new Color(0, 255, 0)));
+                result.add(new Polygon(near, dx, far, normal1, new Color(0, 255, 0)));
+                result.add(new Polygon(near, dz, far, normal2, new Color(0, 255, 0)));
             }
         }
         return result;

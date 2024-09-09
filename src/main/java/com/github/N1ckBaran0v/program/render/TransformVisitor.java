@@ -1,7 +1,5 @@
 package com.github.N1ckBaran0v.program.render;
 
-import com.github.N1ckBaran0v.program.containers.HashMap2D;
-import com.github.N1ckBaran0v.program.containers.Map2D;
 import com.github.N1ckBaran0v.program.geometry.*;
 import com.github.N1ckBaran0v.program.guiAdapters.AbstractImage;
 import com.github.N1ckBaran0v.program.scene.Camera;
@@ -11,25 +9,16 @@ import com.github.N1ckBaran0v.program.scene.SceneObjectVisitor;
 import java.util.*;
 
 class TransformVisitor implements SceneObjectVisitor {
-    private final Vector4D center;
+    private final Vector3D center;
     private final AbstractDrawStrategy drawStrategy;
     private final Matrix4D cameraMatrix, frustumMatrix;
     private final double focus;
-    private final Map<Vector4D, Double> brightnesses;
-    private final Map<Vector4D, Vector4D> transformed = new HashMap<>();
-    private final Map<Vector4D, Vector4D> reverse = new HashMap<>();
-    private final Map<Vector4D, Vector3D> formatted = new HashMap<>();
-    private final Set<Vector4D> created = new HashSet<>();
-    private final Map2D<Vector4D, Vector4D> intersection = new HashMap2D<>();
-    private final List<Vector4D> invalid = new ArrayList<>();
-    private final List<Vector4D> maybeVisible = new ArrayList<>();
-    private final List<Vector3D> dotList = new ArrayList<>();
+    private final List<DrawVector> invalid = new ArrayList<>(3);
+    private final List<DrawVector> maybeVisible = new ArrayList<>(4);
 
-    public TransformVisitor(Camera camera, DrawStrategyCreator drawStrategyCreator, AbstractImage image, Color color,
-                            Map<Vector4D, Double> brightnesses) {
+    public TransformVisitor(Camera camera, DrawStrategyCreator drawStrategyCreator, AbstractImage image, Color color) {
         center = camera.getCenter();
         focus = camera.getFocus();
-        this.brightnesses = brightnesses;
         drawStrategy = drawStrategyCreator.create(image, color);
         cameraMatrix = camera.getTransformMatrix();
         var frustum = new Frustum(image, focus, camera.getVisibility());
@@ -43,26 +32,26 @@ class TransformVisitor implements SceneObjectVisitor {
         }
     }
 
-    public void removeCreated() {
-        for (var dot : created) {
-            brightnesses.remove(dot);
-        }
-    }
-
-    private void drawPolygon(Polygon4D polygon) {
+    private void drawPolygon(Polygon polygon) {
         for (var elem : polygon) {
-            var dot = transformed.get(elem);
-            if (dot == null) {
-                dot = Vector4D.sub(center, elem);
+            var dot = elem.drawDot;
+            if (!dot.isUsed) {
+                dot.set(center, elem.realDot);
                 cameraMatrix.transformVector(dot);
                 frustumMatrix.transformVector(dot);
-                transformed.put(elem, dot);
-                reverse.put(dot, elem);
-            }
-            if (dot.w >= focus) {
-                maybeVisible.add(dot);
+                if (dot.w >= focus) {
+                    maybeVisible.add(dot);
+                    dot.to3D();
+                } else {
+                    invalid.add(dot);
+                }
+                dot.isUsed = true;
             } else {
-                invalid.add(dot);
+                if (dot.w >= focus) {
+                    maybeVisible.add(dot);
+                } else {
+                    invalid.add(dot);
+                }
             }
         }
         var len = maybeVisible.size();
@@ -71,38 +60,23 @@ class TransformVisitor implements SceneObjectVisitor {
                 maybeVisible.add(len, findDot(incorrect, maybeVisible.get(i)));
             }
         }
-        for (var dot : maybeVisible) {
-            dotList.add(getFormattedDot(dot));
-        }
-        triangulate(dotList, polygon.color);
+        triangulate(maybeVisible, polygon.color);
         invalid.clear();
         maybeVisible.clear();
-        dotList.clear();
     }
 
-    private Vector4D findDot(Vector4D a, Vector4D b) {
-        var result = intersection.get(a, b);
-        if (result == null) {
-            var t = (b.w - focus) / (b.w - a.w);
-            result = new Vector4D(b.x + (a.x - b.x) * t, b.y + (a.y - b.y) * t, 0);
-            result.w = focus;
-            intersection.put(a, b, result);
-            brightnesses.put(result, (brightnesses.get(reverse.get(a)) + brightnesses.get(reverse.get(b))) / 2);
-            created.add(result);
-        }
+    private DrawVector findDot(DrawVector a, DrawVector b) {
+        var t = (b.w - focus) / (b.w - a.w);
+        var result = new DrawVector();
+        var x = b.x * b.w;
+        result.x = x + (a.x - x) * t;
+        var y = b.y * b.w;
+        result.y = y + (a.y - y) * t;
+        result.w = focus;
         return result;
     }
 
-    private Vector3D getFormattedDot(Vector4D dot) {
-        var formattedDot = formatted.get(dot);
-        if (formattedDot == null) {
-            formattedDot = dot.toVector3D(brightnesses.get(reverse.getOrDefault(dot, dot)));
-            formatted.put(dot, formattedDot);
-        }
-        return formattedDot;
-    }
-
-    private void triangulate(List<Vector3D> polygon, Color color) {
+    private void triangulate(List<DrawVector> polygon, Color color) {
         if (polygon.size() < 3) {
             return;
         }

@@ -10,7 +10,16 @@ public class Matrix4D {
         xx = yy = zz = ww = 1;
     }
 
-    public void transformVector(Vector4D vector) {
+    public void transformVector(Vector3D vector) {
+        var x = vector.x * xx + vector.y * xy + vector.z * xz;
+        var y = vector.x * yx + vector.y * yy + vector.z * yz;
+        var z = vector.x * zx + vector.y * zy + vector.z * zz;
+        vector.x = x;
+        vector.y = y;
+        vector.z = z;
+    }
+
+    public void transformVector(DrawVector vector) {
         var x = vector.x * xx + vector.y * xy + vector.z * xz + vector.w * xw;
         var y = vector.x * yx + vector.y * yy + vector.z * yz + vector.w * yw;
         var z = vector.x * zx + vector.y * zy + vector.z * zz + vector.w * zw;

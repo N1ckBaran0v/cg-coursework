@@ -1,13 +1,13 @@
 package com.github.N1ckBaran0v.program.scene;
 
-import com.github.N1ckBaran0v.program.geometry.Polygon4D;
-import com.github.N1ckBaran0v.program.geometry.Vector4D;
+import com.github.N1ckBaran0v.program.geometry.Polygon;
+import com.github.N1ckBaran0v.program.geometry.Vector3D;
 
-abstract public class PolygonalModel extends SceneObject implements Iterable<Polygon4D> {
+abstract public class PolygonalModel extends SceneObject implements Iterable<Polygon> {
     protected PolygonalModel() {
     }
 
-    protected PolygonalModel(Vector4D center) {
+    protected PolygonalModel(Vector3D center) {
         super(center);
     }
 

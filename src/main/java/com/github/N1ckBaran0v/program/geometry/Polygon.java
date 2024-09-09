@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class Polygon4D implements Iterable<Vector4D> {
-    public final List<Vector4D> dots = new ArrayList<>();
-    public final Vector4D normal;
+public class Polygon implements Iterable<PolygonVector> {
+    public final List<PolygonVector> dots = new ArrayList<>();
+    public final Vector3D normal;
     public final Color color;
 
-    public Polygon4D(Vector4D first, Vector4D second, Vector4D third, Vector4D normal, Color color) {
+    public Polygon(PolygonVector first, PolygonVector second, PolygonVector third, Vector3D normal, Color color) {
         this.color = color;
         this.normal = normal;
         dots.add(first);
@@ -18,7 +18,7 @@ public class Polygon4D implements Iterable<Vector4D> {
     }
 
     @Override
-    public Iterator<Vector4D> iterator() {
+    public Iterator<PolygonVector> iterator() {
         return dots.iterator();
     }
 }
