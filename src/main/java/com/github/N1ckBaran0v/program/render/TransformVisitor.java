@@ -73,6 +73,9 @@ class TransformVisitor implements SceneObjectVisitor {
         var y = b.y * b.w;
         result.y = y + (a.y - y) * t;
         result.w = focus;
+        result.to3D();
+        result.isUsed = true;
+        result.brightness = b.brightness + (a.brightness - b.brightness) * t;
         return result;
     }
 

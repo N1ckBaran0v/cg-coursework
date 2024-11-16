@@ -27,11 +27,9 @@ public class RenderImplementation implements Render {
     public void draw(String cameraName) {
         var camera = (Camera) scene.getObject(cameraName);
         var image = abstractDrawFactory.getImage(cameraName);
-        var lightChecker = new CollectLightsVisitor();
         var needRecalculate = false;
-        var collector = new CollectDotsVisitor();
+        var collector = new CollectorVisitor();
         for (var object : scene) {
-            object.accept(lightChecker);
             object.accept(collector);
             if (object.isNeedRecalculate()) {
                 object.setNeedRecalculate(false);
@@ -47,7 +45,7 @@ public class RenderImplementation implements Render {
             for (var object : scene) {
                 object.accept(normalVisitor);
             }
-            var lightCalculator = new CalculateLight(lightChecker.getLights());
+            var lightCalculator = new CalculateLight(collector.getLights());
             for (var dot : dots) {
                 dot.drawDot.brightness = lightCalculator.calculateBrightness(dot.normal);
             }

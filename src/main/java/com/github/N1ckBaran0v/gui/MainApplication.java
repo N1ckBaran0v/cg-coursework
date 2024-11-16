@@ -99,7 +99,7 @@ public class MainApplication implements Runnable {
         author.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                JOptionPane.showMessageDialog(null, "Баранов Николай Алексеевич", "Автор",
+                JOptionPane.showMessageDialog(null, "Баранов Николай Алексеевич, группа ИУ7-51Б", "Автор",
                         JOptionPane.INFORMATION_MESSAGE);
             }
         });

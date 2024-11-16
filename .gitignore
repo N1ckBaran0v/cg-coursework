@@ -36,3 +36,12 @@ replay_pid*
 
 # saves
 *.json
+
+# tex files
+*.aux
+*.bbl
+*.blg
+*.out
+*.gz
+*.toc
+*.dvi

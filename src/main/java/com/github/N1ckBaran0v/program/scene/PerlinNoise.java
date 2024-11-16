@@ -18,8 +18,8 @@ class PerlinNoise {
     }
 
     public double get(long x, long y) {
-        var dx = Math.abs(x / sideSize + 1000);
-        var dy = Math.abs(y / sideSize + 1000);
+        var dx = Math.abs(x / sideSize);
+        var dy = Math.abs(y / sideSize);
         var amplitude = 1.0;
         var maxval = 0.0;
         var result = 0.0;
@@ -52,8 +52,8 @@ class PerlinNoise {
     }
 
     private double noise(double x, double y) {
-        var xi = (int) x;
-        var yi = (int) y;
+        var xi = (int) Math.floor(x);
+        var yi = (int) Math.floor(y);
         var dx = x - (double) xi;
         var dy = y - (double) yi;
         return lerp(lerp(gradient(hashFunc(xi, yi), dx, dy),

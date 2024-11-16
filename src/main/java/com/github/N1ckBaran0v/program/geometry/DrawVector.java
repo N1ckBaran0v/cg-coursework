@@ -2,7 +2,7 @@ package com.github.N1ckBaran0v.program.geometry;
 
 public class DrawVector {
     public double x, y, z, w;
-    public boolean isUsed;
+    public boolean isUsed, isVisible;
     public double brightness;
 
     public void set(Vector3D start, Vector3D end) {
@@ -13,10 +13,8 @@ public class DrawVector {
     }
 
     public void to3D() {
-        if (!isUsed) {
-            x /= w;
-            y /= w;
-            z /= w;
-        }
+        x /= w;
+        y /= w;
+        z /= w;
     }
 }
