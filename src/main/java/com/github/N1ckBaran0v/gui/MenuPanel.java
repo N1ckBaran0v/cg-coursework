@@ -7,39 +7,52 @@ import java.util.ArrayList;
 import java.util.List;
 
 class MenuPanel extends JPanel {
-    private static final int WIDTH = 260;
+    private static final int WIDTH = 340;
     private static final int HEIGHT = 20;
     private static final int OFFSET = 10;
-    private static final Font STANDART_FONT = new Font(Font.MONOSPACED, Font.PLAIN, 14);
+    private static final int STEP = HEIGHT + OFFSET;
+    private static final int HALF_WIDTH = (WIDTH - OFFSET) >> 1;
+    private static final int OFFSET_2 = (OFFSET << 1) + HALF_WIDTH;
+    private static final Font STANDART_FONT = new Font(Font.MONOSPACED, Font.PLAIN, 12);
     private static final Font TITLE_FONT = new Font(Font.MONOSPACED, Font.BOLD, 20);
+    private final GenerateActionListener genListener = new GenerateActionListener();
 
     public MenuPanel() {
         setBackground(Color.BLACK);
         setLayout(null);
         add(addLabel("Параметры генерации", OFFSET, OFFSET, WIDTH, true));
-        var labels = new String[]{"Ключ генерации", "Минимальная высота", "Максимальная высота"};
-        var entryDefaults = new String[]{"", "0", "1024"};
+        var labels = new String[]{
+                "Размер стороны",
+                "Шаг задания высот",
+                "Шаг интерполяции",
+                "Значение по умолчанию"
+        };
+        var entryDefaults = new String[]{"10000", "2000", "500", "0"};
         var entries = new ArrayList<JTextField>();
-        for (var i = 0; i < 3; ++i) {
-            add(addLabel(labels[i], OFFSET, OFFSET + (2 * i + 1) * (OFFSET + HEIGHT), WIDTH, false));
-            var entry = addTextField(entryDefaults[i], OFFSET, OFFSET + (2 * (i + 1)) * (OFFSET + HEIGHT), WIDTH);
+        for (var i = 0; i < labels.length; ++i) {
+            var offset = OFFSET + (i % 2) * (OFFSET + HALF_WIDTH);
+            add(addLabel(labels[i], offset, OFFSET + (2 * (i / 2) + 1) * STEP, HALF_WIDTH, false));
+            var entry = addTextField(entryDefaults[i], offset, OFFSET + (2 * ((i / 2) + 1)) * STEP, HALF_WIDTH);
             add(entry);
             entries.add(entry);
         }
-        labels = new String[]{"Сторона квадрата", "Шаг отрисовки", "Дальность прорисовки"};
-        var ranges = new long[][]{{1024, 2048, 4096}, {32, 64, 128, 256, 512, 1024}, {1, 2, 3, 4, 5, 6, 7, 8}};
-        var startIndexes = new int[]{1, 2, 3};
-        var paramLabels = new ArrayList<JLabel>();
-        for (var i = 0; i < 3; ++i) {
-            paramLabels.add(addRange(labels[i], OFFSET + (OFFSET + HEIGHT) * (7 + 2 * i), ranges[i], startIndexes[i]));
-        }
-        add(addButton("Сгенерировать", OFFSET, OFFSET + (OFFSET + HEIGHT) * 13, WIDTH,
-                new GenerateActionListener(entries, paramLabels)));
-        add(addButton("Загрузить из файла", OFFSET, OFFSET + (OFFSET + HEIGHT) * 14, WIDTH, new LoadActionListener()));
-        add(addButton("Сохранить в файл", OFFSET, OFFSET + (OFFSET + HEIGHT) * 15, WIDTH, new SaveActionListener()));
-        add(addLabel("Источник света", OFFSET, OFFSET + (OFFSET + HEIGHT) * 16, WIDTH, true));
-        var angles = addAngles(OFFSET + (OFFSET + HEIGHT) * 17);
-        add(addButton("Применить", OFFSET, OFFSET + (OFFSET + HEIGHT) * 19, WIDTH, new LightActionListener(angles)));
+        add(addLabel("Значение высоты", OFFSET_2, OFFSET + 6 * STEP, HALF_WIDTH, false));
+        var entry = addTextField("", OFFSET_2, OFFSET + 7 * STEP, HALF_WIDTH);
+        var box = addComboBox("Выбор точки", OFFSET + 6 * STEP, entry);
+        var preGen = new PreGenerateActionListener(genListener, box, entries);
+        add(addButton("Сгенерировать точки", OFFSET, OFFSET + STEP * 5, WIDTH, preGen));
+        add(box);
+        add(entry);
+        add(addButton("Обновить значение в точке", OFFSET, OFFSET + STEP * 8, WIDTH,
+                new SaveHeightActionListener(genListener, box, entry)));
+        add(addButton("Сгенерировать ландшафт", OFFSET, OFFSET + STEP * 9, WIDTH, genListener));
+        preGen.actionPerformed(null);
+        genListener.actionPerformed(null);
+        add(addButton("Загрузить", OFFSET, OFFSET + STEP * 10, HALF_WIDTH, new LoadActionListener()));
+        add(addButton("Сохранить", OFFSET_2, OFFSET + STEP * 10, HALF_WIDTH, new SaveActionListener()));
+        add(addLabel("Источник света", OFFSET, OFFSET + STEP * 11, WIDTH, true));
+        var angles = addAngles(OFFSET + STEP * 12);
+        add(addButton("Применить", OFFSET, OFFSET + STEP * 14, WIDTH, new LightActionListener(angles)));
     }
 
     private JLabel addLabel(String text, int x, int y, int width, boolean isTitle) {
@@ -81,16 +94,40 @@ class MenuPanel extends JPanel {
 
     private List<JTextField> addAngles(int y) {
         var list = new ArrayList<JTextField>();
-        var width = (WIDTH - OFFSET) >> 1;
-        add(addLabel("Угол по оси OX", OFFSET, y, width, false));
-        add(addLabel("Угол по оси OZ", OFFSET * 2 + width, y, width, false));
+        add(addLabel("Угол по оси OX", OFFSET, y, HALF_WIDTH, false));
+        add(addLabel("Угол по оси OZ", OFFSET * 2 + HALF_WIDTH, y, HALF_WIDTH, false));
         y += OFFSET + HEIGHT;
-        var field1 = addTextField("0", OFFSET, y, width);
-        var field2 = addTextField("0", OFFSET * 2 + width, y, width);
+        var field1 = addTextField("0", OFFSET, y, HALF_WIDTH);
+        var field2 = addTextField("0", OFFSET * 2 + HALF_WIDTH, y, HALF_WIDTH);
         add(field1);
         add(field2);
         list.add(field1);
         list.add(field2);
         return list;
+    }
+
+    private JComboBox<String> addComboBox(String text, int y, JTextField field) {
+    add(addLabel(text, OFFSET, y, HALF_WIDTH, false));
+        y += OFFSET + HEIGHT;
+        var box = new JComboBox<String>() {
+            @Override
+            protected void selectedItemChanged() {
+                super.selectedItemChanged();
+                if (getSelectedItem() != null) {
+                    try {
+                        var items = ((String) getSelectedItem()).split(" ");
+                        var x = Integer.parseInt(items[0]);
+                        var y = Integer.parseInt(items[1]);
+                        field.setText(String.valueOf(genListener.get(x, y)));
+                    } catch (Exception ignored) {
+                    }
+                }
+            }
+        };
+        box.setBackground(Color.BLACK);
+        box.setForeground(Color.WHITE);
+        box.setFont(STANDART_FONT);
+        box.setBounds(OFFSET, y, HALF_WIDTH, HEIGHT);
+        return box;
     }
 }

@@ -1,9 +1,10 @@
 package com.github.N1ckBaran0v.program.scene;
 
-import com.github.N1ckBaran0v.program.geometry.Vector4D;
+import com.github.N1ckBaran0v.program.math.Vector3D;
+import org.jetbrains.annotations.NotNull;
 
 public class FarLight extends SceneObject {
-    private final Vector4D direction = new Vector4D(0, -1, 0);
+    private final Vector3D direction = new Vector3D(0, -1, 0);
 
     @Override
     public void rotate(double ax, double ay, double az) {
@@ -17,11 +18,11 @@ public class FarLight extends SceneObject {
     }
 
     @Override
-    public void accept(SceneObjectVisitor visitor) {
+    public void accept(@NotNull SceneObjectVisitor visitor) {
         visitor.visit(this);
     }
 
-    public Vector4D getDirection() {
+    public Vector3D getDirection() {
         return direction;
     }
 }

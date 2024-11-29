@@ -1,28 +1,26 @@
 package com.github.N1ckBaran0v.program.scene;
 
-import com.github.N1ckBaran0v.program.Facade;
-import com.github.N1ckBaran0v.program.geometry.Matrix4D;
-import com.github.N1ckBaran0v.program.geometry.Vector4D;
+import com.github.N1ckBaran0v.program.math.Matrix4D;
+import com.github.N1ckBaran0v.program.math.Vector3D;
+import org.jetbrains.annotations.NotNull;
 
 public class Camera extends SceneObject {
-    private final Vector4D vx = new Vector4D(1, 0, 0);
-    private final Vector4D vy = new Vector4D(0, 1, 0);
-    private final Vector4D vz = new Vector4D(0, 0, 1);
-    private double focus = 512, visibility = 4096;
-    private static final double EPS = 5e-7;
+    private final Vector3D vx = new Vector3D(1, 0, 0);
+    private final Vector3D vy = new Vector3D(0, 1, 0);
+    private final Vector3D vz = new Vector3D(0, 0, 1);
+    private double focus = 512, visibility = 16384;
     private static final double MAX_ANGLE = 90;
     private static final double CIRCLE = 360;
     private double angleY, angleZ;
 
     @Override
     public void move(double dx, double dy, double dz) {
-        var offset = new Vector4D(dx, 0, dz);
+        var offset = new Vector3D(dx, 0, dz);
         var tm = getInverseMatrix();
         tm.transformVector(offset);
         var center = getCenter();
         center.add(offset);
         center.add(0, dy, 0);
-        Facade.execute(new CheckRegenerateNecessity());
     }
 
     @Override
@@ -51,7 +49,7 @@ public class Camera extends SceneObject {
     }
 
     @Override
-    public void accept(SceneObjectVisitor visitor) {
+    public void accept(@NotNull SceneObjectVisitor visitor) {
         visitor.visit(this);
     }
 

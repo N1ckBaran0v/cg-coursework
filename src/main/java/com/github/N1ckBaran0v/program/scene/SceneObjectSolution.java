@@ -1,5 +1,7 @@
 package com.github.N1ckBaran0v.program.scene;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,7 +13,7 @@ class SceneObjectSolution {
         creatorMap.put("FarLight", new FarLightCreator());
     }
 
-    public SceneObjectCreator getCreator(String name) {
+    public SceneObjectCreator getCreator(@NotNull String name) {
         return creatorMap.get(name);
     }
 }

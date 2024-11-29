@@ -25,17 +25,16 @@ public class MainApplication implements Runnable {
     @Override
     public void run() {
         var frame = new JFrame("Генерация ландшафта");
-        frame.setMinimumSize(new Dimension(1120, 630));
-        frame.setBounds(300, 200, 1120, 630);
+        frame.setMinimumSize(new Dimension(960, 540));
+        frame.setBounds(300, 200, 960, 540);
         var factory = new SwingFactory();
         Facade.setDrawFactory(factory);
         var canvas = new CanvasPanel(factory);
         var splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, new MenuPanel(), canvas);
         splitPane.setEnabled(false);
-        splitPane.setDividerLocation(280);
+        splitPane.setDividerLocation(360);
         frame.setContentPane(splitPane);
         addMenuBar(frame);
-        Facade.execute(new AddObjectCommand("FarLight", "FarLight"));
         frame.addMouseListener(new CanvasMouseListener(canvas));
         frame.addWindowFocusListener(new WindowAdapter() {
             @Override
@@ -57,12 +56,13 @@ public class MainApplication implements Runnable {
                 var sb = new StringBuilder();
                 sb.append("Курсовая работа по теме \"Генерация ландшафта\".");
                 sb.append("\nПрограмма генерирует ландшафт по заданным параметрам.");
-                sb.append("\nКлюч генерации - целое число, необходимое для настройки генератора.");
-                sb.append("\nОставьте это поле пустым для применения случайного ключа генерации.");
-                sb.append("\nМинимальная и максимальная высоты - 2 вещественных числа, задающие диапазон высот ландшафта.");
-                sb.append("\nРазмер квадрата - натуральное число, задающее размер стороны квадрата генерации.");
-                sb.append("\nШаг отрисовки - натуральное число, задающее размер стороны полигонов.");
-                sb.append("\nДальность прорисовки - натуральное число, задающее дальность видимости (в квадратах).");
+                sb.append("\n1. Размер стороны - натуральное число.");
+                sb.append("\n2. Шаг задания точек - натуральное число.");
+                sb.append("\n3. Шаг интерполяции - натуральное число.");
+                sb.append("\n4. Значение в точке - вещественное число.");
+                sb.append("\nРазмер стороны квадрата не должен быть меньше шага задания точек,");
+                sb.append("\nпричём размер стороны квадрата должен делиться на шаг задания точек.");
+                sb.append("\nАналогично для шага задания точек и шага интерполяции.");
                 sb.append("\nТакже в программе присутствуют источник света и камера.");
                 sb.append("\nПро управление камерой можно прочитать в соответствующем разделе.");
                 sb.append("\nВектор направления источника света задается двумя углами.");
@@ -99,7 +99,7 @@ public class MainApplication implements Runnable {
         author.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                JOptionPane.showMessageDialog(null, "Баранов Николай Алексеевич", "Автор",
+                JOptionPane.showMessageDialog(null, "Баранов Николай Алексеевич, группа ИУ7-51Б", "Автор",
                         JOptionPane.INFORMATION_MESSAGE);
             }
         });

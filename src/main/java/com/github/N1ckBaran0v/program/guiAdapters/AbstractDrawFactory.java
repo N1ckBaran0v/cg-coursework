@@ -1,7 +1,9 @@
 package com.github.N1ckBaran0v.program.guiAdapters;
 
-public interface AbstractDrawFactory {
-    AbstractImage getImage(String cameraName);
+import org.jetbrains.annotations.NotNull;
 
-    AbstractGraphics getGraphics(String cameraName);
+public interface AbstractDrawFactory {
+    AbstractImage getImage(@NotNull String cameraName);
+
+    AbstractGraphics getGraphics(@NotNull String cameraName);
 }

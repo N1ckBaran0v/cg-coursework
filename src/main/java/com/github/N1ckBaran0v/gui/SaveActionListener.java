@@ -7,34 +7,42 @@ import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 class SaveActionListener implements ActionListener {
-    private final String PATH = "src" + File.separator + "main" + File.separator + "resources";
+    private static final Path PATH = Path.of("saves");
 
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
-        var chooser = new JFileChooser();
-        chooser.setDialogTitle("Сохранение параметров");
-        chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        chooser.setCurrentDirectory(new File(PATH));
-        chooser.setFileFilter(new FileNameExtensionFilter("JSON files", "json"));
-        var result = chooser.showSaveDialog(null);
-        if (result == JFileChooser.APPROVE_OPTION) {
-            var flag = chooser.getSelectedFile().exists();
-            try {
-                Facade.execute(new SaveLandscapeCommand(chooser.getSelectedFile().getPath()));
-                flag = true;
-            } catch (NullPointerException exception) {
-                JOptionPane.showMessageDialog(null, "Ландшафт не сгенерирован", "Ошибка", JOptionPane.ERROR_MESSAGE);
-                flag = false;
-            } catch (Exception exception) {
-                JOptionPane.showMessageDialog(null, "Ошибка при работе с файлом", "Ошибка", JOptionPane.ERROR_MESSAGE);
-                flag = false;
+        try {
+            var chooser = new JFileChooser();
+            chooser.setDialogTitle("Сохранение параметров");
+            chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+            if (!Files.exists(PATH)) {
+                Files.createDirectory(PATH);
             }
-            if (!flag) {
-                chooser.getSelectedFile().delete();
+            chooser.setCurrentDirectory(PATH.toFile());
+            chooser.setFileFilter(new FileNameExtensionFilter("JSON files", "json"));
+            var result = chooser.showSaveDialog(null);
+            if (result == JFileChooser.APPROVE_OPTION) {
+                var flag = chooser.getSelectedFile().exists();
+                try {
+                    Facade.execute(new SaveLandscapeCommand(chooser.getSelectedFile().getPath()));
+                    flag = true;
+                } catch (Exception exception) {
+                    JOptionPane.showMessageDialog(null, "Ошибка при работе с файлом", "Ошибка",
+                            JOptionPane.ERROR_MESSAGE);
+                    flag = false;
+                }
+                if (!flag) {
+                    chooser.getSelectedFile().delete();
+                }
             }
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(null, "Ошибка при создании папки", "Ошибка", JOptionPane.ERROR_MESSAGE);
         }
+
     }
 }

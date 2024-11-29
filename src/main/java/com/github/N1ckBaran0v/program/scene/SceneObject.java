@@ -1,18 +1,19 @@
 package com.github.N1ckBaran0v.program.scene;
 
-import com.github.N1ckBaran0v.program.geometry.Vector4D;
+import com.github.N1ckBaran0v.program.math.Vector3D;
+import org.jetbrains.annotations.NotNull;
 
 import javax.naming.OperationNotSupportedException;
 
 abstract public class SceneObject {
-    private final transient Vector4D center;
+    protected final transient Vector3D center;
     private transient boolean needRecalculate;
 
     protected SceneObject() {
-        this.center = new Vector4D();
+        this.center = new Vector3D();
     }
 
-    protected SceneObject(Vector4D center) {
+    protected SceneObject(@NotNull Vector3D center) {
         this.center = center;
     }
 
@@ -28,11 +29,11 @@ abstract public class SceneObject {
         center.set(x, y, z);
     }
 
-    public Vector4D getCenter() {
+    public Vector3D getCenter() {
         return center;
     }
 
-    abstract public void accept(SceneObjectVisitor visitor);
+    abstract public void accept(@NotNull SceneObjectVisitor visitor);
 
     public boolean isNeedRecalculate() {
         return needRecalculate;

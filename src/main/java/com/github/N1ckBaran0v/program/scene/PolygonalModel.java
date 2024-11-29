@@ -1,18 +1,19 @@
 package com.github.N1ckBaran0v.program.scene;
 
-import com.github.N1ckBaran0v.program.geometry.Polygon4D;
-import com.github.N1ckBaran0v.program.geometry.Vector4D;
+import com.github.N1ckBaran0v.program.math.Polygon;
+import com.github.N1ckBaran0v.program.math.Vector3D;
+import org.jetbrains.annotations.NotNull;
 
-abstract public class PolygonalModel extends SceneObject implements Iterable<Polygon4D> {
+abstract public class PolygonalModel extends SceneObject implements Iterable<Polygon> {
     protected PolygonalModel() {
     }
 
-    protected PolygonalModel(Vector4D center) {
+    protected PolygonalModel(@NotNull Vector3D center) {
         super(center);
     }
 
     @Override
-    public void accept(SceneObjectVisitor visitor) {
+    public void accept(@NotNull SceneObjectVisitor visitor) {
         visitor.visit(this);
     }
 }
