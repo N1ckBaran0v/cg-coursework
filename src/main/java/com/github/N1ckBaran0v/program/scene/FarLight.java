@@ -1,6 +1,7 @@
 package com.github.N1ckBaran0v.program.scene;
 
-import com.github.N1ckBaran0v.program.geometry.Vector3D;
+import com.github.N1ckBaran0v.program.math.Vector3D;
+import org.jetbrains.annotations.NotNull;
 
 public class FarLight extends SceneObject {
     private final Vector3D direction = new Vector3D(0, -1, 0);
@@ -17,7 +18,7 @@ public class FarLight extends SceneObject {
     }
 
     @Override
-    public void accept(SceneObjectVisitor visitor) {
+    public void accept(@NotNull SceneObjectVisitor visitor) {
         visitor.visit(this);
     }
 

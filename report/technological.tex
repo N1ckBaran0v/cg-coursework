@@ -1,0 +1,295 @@
+\chapter{Технологическая часть}
+
+\section{Средства реализации}
+
+Для реализации программы был выбран язык программирования Java, так как он содержит все необходимые средства для реализации выбранных в результате проектирования алгоритмов и структур данных. 
+
+Для тестирования был выбран фреймворк JUnit5, так как он имеет достаточный функционал для написания модульных тестов.
+
+\section{Примеры реализаций алгоритмов}
+
+В листингах~\ref{lst:cut1}-\ref{lst:cut3} представлена реализация алгоритма преобразования координат вершин ландшафта и отсечения перед отрисовкой.
+
+\begin{lstlisting}[label=lst:cut1,caption=Реализация алгоритма подготовки полигонов к отрисовке (часть~1)]
+@Override
+public void visit(@NotNull PolygonalModel polygonalModel) {
+	for (var polygon : polygonalModel) {
+		drawPolygon(polygon);
+	}
+}
+
+private void drawPolygon(Polygon polygon) {
+	for (var elem : polygon) {
+		var dot = elem.drawDot;
+		if (!dot.isUsed) {
+			dot.set(center, elem.realDot);
+			cameraMatrix.transformVector(dot);
+			frustumMatrix.transformVector(dot);
+			if (dot.w >= focus) {
+				maybeVisible.add(dot);
+				dot.to3D();
+			} else {
+				invalid.add(dot);
+			}
+			dot.isUsed = true;
+		} else {
+			if (dot.w >= focus) {
+				maybeVisible.add(dot);
+\end{lstlisting}
+\begin{lstlisting}[label=lst:cut2,caption=Реализация алгоритма подготовки полигонов к отрисовке (часть~2)]
+			} else {
+				invalid.add(dot);
+			}
+		}
+	}
+	var len = maybeVisible.size();
+	for (var incorrect : invalid) {
+		for (var i = 0; i < len; ++i) {
+			maybeVisible.add(len, findDot(incorrect, maybeVisible.get(i)));
+		}
+	}
+	triangulate(maybeVisible, polygon.color);
+	invalid.clear();
+	maybeVisible.clear();
+}
+
+private DrawVector findDot(DrawVector a, DrawVector b) {
+	var t = (b.w - focus) / (b.w - a.w);
+	var result = new DrawVector();
+	var x = b.x * b.w;
+	result.x = x + (a.x - x) * t;
+	var y = b.y * b.w;
+	result.y = y + (a.y - y) * t;
+	result.w = focus;
+	result.to3D();
+	result.isUsed = true;
+	result.brightness = b.brightness + (a.brightness - b.brightness) * t;
+	return result;
+}
+
+private void triangulate(List<DrawVector> polygon, Color color) {
+	if (polygon.size() < 3) {
+		return;
+	}
+	var first = polygon.getFirst();
+	var second = polygon.get(1);
+	for (var i = 2; i < polygon.size(); ++i) {
+\end{lstlisting}
+\begin{lstlisting}[label=lst:cut3,caption=Реализация алгоритма подготовки полигонов к отрисовке (часть~3)]
+		var third = polygon.get(i);
+		drawStrategy.draw(first, second, third, color);
+		second = third;
+	}
+}
+\end{lstlisting}
+
+В листингах~\ref{lst:z-buffer1}-\ref{lst:z-buffer2} представлена реализация алгоритма, использующего Z-буффер, и закраски Гуро.
+
+\begin{lstlisting}[label=lst:z-buffer1,caption=Реализация алгоритма отрисовки полигона (часть~1)]
+@Override
+public void draw(@NotNull DrawVector d1, @NotNull DrawVector d2, @NotNull DrawVector d3, @NotNull Color color) {
+	var x0 = Math.max(xMin, (int) Math.floor(Math.min(d1.x, Math.min(d2.x, d3.x))));
+	var x1 = Math.min(xMax, (int) Math.ceil(Math.max(d1.x, Math.max(d2.x, d3.x))));
+	var y0 = Math.max(yMin, (int) Math.floor(Math.min(d1.y, Math.min(d2.y, d3.y))));
+	var y1 = Math.min(yMax, (int) Math.ceil(Math.max(d1.y, Math.max(d2.y, d3.y))));
+	var divider = (d1.x - d2.x) * (d2.y - d3.y) - (d2.x - d3.x) * (d1.y - d2.y);
+	for (var x = x0; x <= x1; ++x) {
+		for (var y = y0; y <= y1; ++y) {
+			var k1 = ((x - d2.x) * (y - d3.y) - (x - d3.x) * (y - d2.y)) / divider;
+			var k2 = ((x - d3.x) * (y - d1.y) - (x - d1.x) * (y - d3.y)) / divider;
+			var k3 = ((x - d1.x) * (y - d2.y) - (x - d2.x) * (y - d1.y)) / divider;
+			if (k1 >= 0 && k1 <= 1 && k2 >= 0 && k2 <= 1 && k3 >= 0 && k3 <= 1) {
+				var z = d1.z * k1 + d2.z * k2 + d3.z * k3;
+				if (buffer[x][y] > z) {
+					buffer[x][y] = z;
+					if (z > 0.9) {
+						color.setAlpha((int) ((1 - z) * 2550));
+					}
+\end{lstlisting}
+\clearpage
+\begin{lstlisting}[label=lst:z-buffer2,caption=Реализация алгоритма отрисовки полигона (часть~2)]
+					var brightness = d1.brightness * k1 + d2.brightness * k2 + d3.brightness * k3;
+					color.setBrightness(brightness);
+					image.setPixel(x, y, color.getRGBWithBrightness());
+					color.setAlpha(255);
+				}
+			}
+		}
+	}
+}
+\end{lstlisting}
+
+В листингах~\ref{lst:gen1}-\ref{lst:gen4} представлена реализация алгоритма генерации ландшафта с помощью кригинга.
+
+\begin{lstlisting}[label=lst:gen1,caption=Реализация алгоритма генерации ландшафта (часть~1)]
+@Override
+public void run() {
+	synchronized (landscape) {
+		needStop = false;
+		var map = generateHeights();
+		var polygons = generatePolygons(map);
+		if (!needStop) {
+			landscape.setPolygons(polygons);
+			landscape.setInputHeightsMap(heights);
+			landscape.setSideSize(sideSize);
+			landscape.setSquareSize(squareSize);
+			landscape.setStep(step);
+			landscape.setNeedRecalculate(true);
+		}
+	}
+}
+
+private Map2D<Integer, PolygonVector> generateHeights() {
+	var map = new HashMap2D<Integer, PolygonVector>();
+	for (var i = 0; i <= sideSize && !needStop; i += step) {
+		for (var j = 0; j <= sideSize && !needStop; j += step) {
+			if (i % squareSize + j % squareSize > 0) {
+				map.put(i, j, new PolygonVector(i, interpolate(i, j), j));
+			} else {
+\end{lstlisting}
+\begin{lstlisting}[label=lst:gen2,caption=Реализация алгоритма генерации ландшафта (часть~2)]
+				map.put(i, j, new PolygonVector(i, fastHeights[i / squareSize][j / squareSize], j));
+			}
+		}
+	}
+	return map;
+}
+
+private List<Polygon> generatePolygons(@NotNull Map2D<Integer, PolygonVector> heights) {
+	var polygons = new LinkedList<Polygon>();
+	for (var i = 0; i < sideSize && !needStop; i += step) {
+		var near = heights.get(i, 0);
+		var dx = heights.get(i + step, 0);
+		var dz = near;
+		var far = dx;
+		for (var j = 0; j < sideSize && !needStop; j += step) {
+			far = heights.get(i + step, j + step);
+			dz = heights.get(i, j + step);
+			var normal1 = Vector3D.getNormal(near, dx, far);
+			if (normal1.y < 0) {
+				normal1.inverse();
+			}
+			var normal2 = Vector3D.getNormal(near, dz, far);
+			if (normal2.y < 0) {
+				normal2.inverse();
+			}
+			normal1.normalize();
+			normal2.normalize();
+			polygons.add(new Polygon(near, dx, far, normal1, new Color(0, 255, 0)));
+			polygons.add(new Polygon(near, dz, far, normal2, new Color(0, 255, 0)));
+			near = dz;
+			dx = far;
+		}
+	}
+	return polygons;
+}
+\end{lstlisting}
+\clearpage
+\begin{lstlisting}[label=lst:gen3,caption=Реализация алгоритма генерации ландшафта (часть~3)]
+private double interpolate(int x, int y) {
+	var result = 0.0;
+	if (x % squareSize == 0 || y % squareSize == 0) {
+		result = fastHeights[x / squareSize][y / squareSize];
+	} else {
+		var matrix = copy(crigingMatrix);
+		var answer = new double[matrix.length];
+		var xi = 0;
+		var yi = 0;
+		for (var k = 0; k < matrix.length; ++k) {
+			answer[k] = covariation(xi, yi, x, y);
+			if (yi == sideSize) {
+				yi = 0;
+				xi += squareSize;
+			} else {
+				yi += squareSize;
+			}
+		}
+		Gauss.solve(matrix, answer);
+		var i = 0;
+		var j = 0;
+		for (var k = 0; k < matrix.length; ++k) {
+			result += answer[k] * fastHeights[i][j];
+			++j;
+			if (j == size) {
+				j = 0;
+				++i;
+			}
+		}
+	}
+	return result;
+}
+
+private double covariation(int x0, int y0, int x1, int y1) {
+	var h2 = (x1 - x0) * (x1 - x0) + (y1 - y0) * (y1 - y0);
+	return 1 - Math.exp(-h2/radius2);
+}
+
+private double[][] copy(double[][] matrix) {
+	var result = new double[matrix.length][matrix.length];
+\end{lstlisting}
+
+\begin{lstlisting}[label=lst:gen4,caption=Реализация алгоритма генерации ландшафта (часть~4)]
+		for (var i = 0; i < matrix.length; ++i) {
+		System.arraycopy(matrix[i], 0, result[i], 0, matrix.length);
+	}
+	return result;
+}
+\end{lstlisting}
+
+\section{Интерфейс программы}
+
+На рисунке~\ref{img:interface} представлен пример графического интерфейса программы.
+
+\FloatBarrier
+\includeimage
+{interface} % Имя файла без расширения (файл должен быть расположен в директории inc/img/)
+{f} % Обтекание (без обтекания)
+{h} % Положение рисунка (см. figure из пакета float)
+{1\textwidth} % Ширина рисунка
+{Пример работы программы} % Подпись рисунка
+\FloatBarrier
+
+\section{Тестирование}
+
+Было реализовано модульное тестирование с помощью фреймворка JUnit5. В качестве меры, используемой при тестировании программы, было выбрано покрытие кода, подсчёт которого производился автоматически средствами среды разработки IntelliJ Idea. Процент покрытия кода составил 18\%.
+
+Для создания теста использовалась аннотация $@Test$, а для проверки результата использовались статические методы класса $Assertions$. Пример модульного теста приведён в листинге~\ref{lst:test}.
+Результат выполнения модульных тестов представлен в листинге~\ref{lst:results}.
+
+\begin{lstlisting}[label=lst:test,caption=Пример модульного теста]
+@Test
+void negativeHeights2() {
+	try {
+		heights.getLast().removeLast();
+		new Generator(landscape, heights, sideSize, squareSize, step);
+		fail();
+	} catch (IllegalArgumentException ignored) {
+	}
+}
+\end{lstlisting}
+
+\begin{lstlisting}[label=lst:results,caption=Результат выполнения модульных тестов]
+> Task :test
+
+com.github.N1ckBaran0v.program.math.GaussTest
+
+Test solve() PASSED
+Test negative() PASSED
+
+com.github.N1ckBaran0v.program.scene.GeneratorTest
+
+Test negativeSquareSize() PASSED
+Test run() PASSED
+Test negativeHeights1() PASSED
+Test negativeHeights2() PASSED
+Test negativeHeights3() PASSED
+Test negativeStep() PASSED
+Test negativeSideSize() PASSED
+
+SUCCESS: Executed 9 tests in 1s
+
+\end{lstlisting}
+
+\usection{Выводы}
+
+В данном разделе были выбраны средства реализации, разработана спроектированная программа, представлен графический интерфейс и проведено тестирование.

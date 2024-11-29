@@ -5,6 +5,10 @@ import javax.swing.*;
 
 public final class Main {
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(new MainApplication());
+        if (args.length == 1 && args[0].equals("-b")) {
+            Benchmark.benchmark();
+        } else {
+            SwingUtilities.invokeLater(new MainApplication());
+        }
     }
 }

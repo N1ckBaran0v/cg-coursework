@@ -1,11 +1,11 @@
 package com.github.N1ckBaran0v.program.render;
 
-import com.github.N1ckBaran0v.program.geometry.Color;
-import com.github.N1ckBaran0v.program.geometry.PolygonVector;
-import com.github.N1ckBaran0v.program.geometry.Vector3D;
+import com.github.N1ckBaran0v.program.math.PolygonVector;
+import com.github.N1ckBaran0v.program.math.Vector3D;
 import com.github.N1ckBaran0v.program.guiAdapters.AbstractDrawFactory;
 import com.github.N1ckBaran0v.program.scene.Camera;
 import com.github.N1ckBaran0v.program.scene.Scene;
+import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
 import java.util.Set;
@@ -17,14 +17,15 @@ public class RenderImplementation implements Render {
     private final Color background = new Color(0, 255, 255, 1.0);
 
     @Inject
-    public RenderImplementation(Scene scene, AbstractDrawFactory abstractDrawFactory, DrawStrategyCreator drawStrategyCreator) {
+    public RenderImplementation(@NotNull Scene scene, @NotNull AbstractDrawFactory abstractDrawFactory,
+                                @NotNull DrawStrategyCreator drawStrategyCreator) {
         this.scene = scene;
         this.abstractDrawFactory = abstractDrawFactory;
         this.drawStrategyCreator = drawStrategyCreator;
     }
 
     @Override
-    public void draw(String cameraName) {
+    public void draw(@NotNull String cameraName) {
         var camera = (Camera) scene.getObject(cameraName);
         var image = abstractDrawFactory.getImage(cameraName);
         var needRecalculate = false;
@@ -60,7 +61,7 @@ public class RenderImplementation implements Render {
         graphics.draw(image);
     }
 
-    private void reset(Set<PolygonVector> dots) {
+    private void reset(@NotNull Set<PolygonVector> dots) {
         for (var dot : dots) {
             dot.drawDot.isUsed = false;
         }

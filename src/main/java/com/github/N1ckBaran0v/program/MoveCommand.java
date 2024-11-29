@@ -1,5 +1,7 @@
 package com.github.N1ckBaran0v.program;
 
+import org.jetbrains.annotations.NotNull;
+
 public class MoveCommand implements Command {
     private final double dx, dy, dz;
     private final String name;
@@ -12,7 +14,7 @@ public class MoveCommand implements Command {
     }
 
     @Override
-    public void execute(Context context) {
+    public void execute(@NotNull Context context) {
         var scene = context.getScene();
         var object = scene.getObject(name);
         object.move(dx, dy, dz);

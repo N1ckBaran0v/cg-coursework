@@ -1,0 +1,24 @@
+\include{prepreamble}
+\documentclass{bmstu}
+\include{preamble}
+
+\addbibresource{biblio.bib}
+
+\begin{document}
+
+    \includepdf{title}
+    \setcounter{page}{4}
+    \maketableofcontents
+    \include{intro}
+    \include{analyse}
+    \include{construction}
+    \include{technological}
+    \include{research}
+    \include{conclusion}
+    
+    \clearpage
+    \phantomsection
+    \addcontentsline{toc}{chapter}{СПИСОК ИСПОЛЬЗОВАННЫХ ИСТОЧНИКОВ}
+    \printbibliography[title=СПИСОК ИСПОЛЬЗОВАННЫХ ИСТОЧНИКОВ]
+
+\end{document}

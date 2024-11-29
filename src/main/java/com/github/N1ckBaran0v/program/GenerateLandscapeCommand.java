@@ -1,27 +1,26 @@
 package com.github.N1ckBaran0v.program;
 
-import com.github.N1ckBaran0v.program.scene.LandscapeHolder;
+import com.github.N1ckBaran0v.program.scene.Generator;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 public class GenerateLandscapeCommand implements Command {
-    private final long seed;
-    private final double minHeight, maxHeight;
-    private final long sideSize, step, maxChunks;
+    private final List<List<Double>> heights;
+    private final int sideSize, squareSize, step;
 
-    public GenerateLandscapeCommand(long seed, double minHeight, double maxHeight, long sideSize, long step,
-                                    long maxChunks) {
-        this.seed = seed;
-        this.minHeight = minHeight;
-        this.maxHeight = maxHeight;
+    public GenerateLandscapeCommand(@NotNull List<List<Double>> heights, int sideSize, int squareSize, int step) {
+        this.heights = heights;
         this.sideSize = sideSize;
+        this.squareSize = squareSize;
         this.step = step;
-        this.maxChunks = maxChunks;
     }
 
     @Override
-    public void execute(Context context) {
-        LandscapeHolder.setParams(seed, minHeight, maxHeight, sideSize, step, maxChunks);
+    public void execute(@NotNull Context context) {
+        new Generator(context.getLandscape(), heights, sideSize, squareSize, step).start();
         var pos = sideSize / 2;
-        var visitor = new SetPositionVisitor(pos, maxHeight + 256, pos, sideSize * maxChunks);
+        var visitor = new SetPositionVisitor(pos, heights.get(heights.size() >> 1).get(heights.size() >> 1) + 500, pos);
         for (var obj : context.getScene()) {
             obj.accept(visitor);
         }

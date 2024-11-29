@@ -2,99 +2,105 @@ package com.github.N1ckBaran0v.program.scene;
 
 import com.github.N1ckBaran0v.program.containers.HashMap2D;
 import com.github.N1ckBaran0v.program.containers.Map2D;
-import com.github.N1ckBaran0v.program.geometry.*;
+import com.github.N1ckBaran0v.program.math.Gauss;
+import com.github.N1ckBaran0v.program.math.Polygon;
+import com.github.N1ckBaran0v.program.math.PolygonVector;
+import com.github.N1ckBaran0v.program.math.Vector3D;
+import com.github.N1ckBaran0v.program.render.Color;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
-class Generator {
-    private Map2D<Long, PolygonVector> dotsMap;
-    private double minHeight, difference;
-    private PerlinNoise generator;
-    private long sideSize, step;
-    private boolean isGenerates;
+public class Generator extends Thread {
+    private static boolean needStop = false;
+    private final Landscape landscape;
+    private final List<List<Double>> heights;
+    private final int sideSize, squareSize, step, size;
+    private final double[][] fastHeights, crigingMatrix;
+    private final double radius2;
 
-    public void setParams(Landscape landscape) {
-        generator = new PerlinNoise(landscape.getSeed(), sideSize);
-        minHeight = landscape.getMinHeight();
-        difference = landscape.getMaxHeight() - minHeight;
-        sideSize = landscape.getSideSize();
-        step = landscape.getStep();
-        dotsMap = new HashMap2D<>();
-    }
-
-    public Chunk generateChunk(long i, long j) {
-        var x0 = i * sideSize;
-        var z0 = j * sideSize;
-        var x1 = x0 + sideSize;
-        var z1 = z0 + sideSize;
-        return new Chunk(generatePolygons(x0, z0, x1, z1));
-    }
-
-    public void removeChunk(Map2D<Long, Chunk> chunks, long i, long j) {
-        var x0 = i * sideSize;
-        var z0 = j * sideSize;
-        var x1 = x0 + sideSize;
-        var z1 = z0 + sideSize;
-        for (var x = x0 + step; x < x1; x += step) {
-            for (var z = z0 + step; z < z1; z += step) {
-                dotsMap.remove(x, z);
+    public Generator(@NotNull Landscape landscape, @NotNull List<List<Double>> heights, int sideSize, int squareSize,
+                     int step) {
+        if (sideSize <= 0 || squareSize <= 0 || step <= 0) {
+            throw new IllegalArgumentException();
+        }
+        if (sideSize % squareSize != 0 || squareSize % step != 0) {
+            throw new IllegalArgumentException();
+        }
+        size = heights.size();
+        if (size != sideSize / squareSize + 1) {
+            throw new IllegalArgumentException();
+        }
+        for (var arr : heights) {
+            if (arr.size() != size) {
+                throw new IllegalArgumentException();
             }
         }
-        if (!chunks.contains(i - 1, j)) {
-            for (var z = z0 + step; z < z1; z += step) {
-                dotsMap.remove(x0, z);
+        this.landscape = landscape;
+        this.heights = heights;
+        this.sideSize = sideSize;
+        this.squareSize = squareSize;
+        this.step = step;
+        needStop = true;
+        fastHeights = new double[size][size];
+        for (var i = 0; i < size; ++i) {
+            for (var j = 0; j < size; ++j) {
+                fastHeights[i][j] = heights.get(i).get(j);
             }
         }
-        if (!chunks.contains(i + 1, j)) {
-            for (var z = z0 + step; z < z1; z += step) {
-                dotsMap.remove(x1, z);
+        radius2 = 2 * sideSize * sideSize;
+        var dotsCount = size * size;
+        crigingMatrix = new double[dotsCount][dotsCount];
+        for (var i = 0; i < dotsCount; ++i) {
+            for (var j = 0; j < dotsCount; ++j) {
+                crigingMatrix[i][j] = covariation((i / size) * squareSize, (i % size) * squareSize,
+                        (j / size) * squareSize, (j % size) * squareSize);
             }
-        }
-        if (!chunks.contains(i, j - 1)) {
-            for (var x = x0 + step; x < x1; x += step) {
-                dotsMap.remove(x, z0);
-            }
-        }
-        if (!chunks.contains(i, j + 1)) {
-            for (var x = x0 + step; x < x1; x += step) {
-                dotsMap.remove(x, z1);
-            }
-        }
-        if (!chunks.contains(i - 1, j) && !chunks.contains(i, j - 1) && !chunks.contains(i - 1, j - 1)) {
-            dotsMap.remove(x0, z0);
-        }
-        if (!chunks.contains(i - 1, j) && !chunks.contains(i, j + 1) && !chunks.contains(i - 1, j + 1)) {
-            dotsMap.remove(x0, z1);
-        }
-        if (!chunks.contains(i + 1, j) && !chunks.contains(i, j - 1) && !chunks.contains(i + 1, j - 1)) {
-            dotsMap.remove(x1, z0);
-        }
-        if (!chunks.contains(i + 1, j) && !chunks.contains(i, j + 1) && !chunks.contains(i + 1, j + 1)) {
-            dotsMap.remove(x1, z1);
         }
     }
 
-    private PolygonVector getDot(long x, long z) {
-        var dot = dotsMap.get(x, z);
-        if (dot == null) {
-            var y = generator.get(x, z) * difference + minHeight;
-            dot = new PolygonVector(x, y, z);
-            dotsMap.put(x, z, dot);
+    @Override
+    public void run() {
+        synchronized (landscape) {
+            needStop = false;
+            var map = generateHeights();
+            var polygons = generatePolygons(map);
+            if (!needStop) {
+                landscape.setPolygons(polygons);
+                landscape.setInputHeightsMap(heights);
+                landscape.setSideSize(sideSize);
+                landscape.setSquareSize(squareSize);
+                landscape.setStep(step);
+                landscape.setNeedRecalculate(true);
+            }
         }
-        return dot;
     }
 
-    private List<Polygon> generatePolygons(long x0, long z0, long x1, long z1) {
-        var result = new ArrayList<Polygon>();
-        for (var x = x0; x < x1; x += step) {
-            var xnext = x + step;
-            for (var z = z0; z < z1; z += step) {
-                var znext = z + step;
-                var near = getDot(x, z);
-                var far = getDot(xnext, znext);
-                var dx = getDot(xnext, z);
-                var dz = getDot(x, znext);
+    private Map2D<Integer, PolygonVector> generateHeights() {
+        var map = new HashMap2D<Integer, PolygonVector>();
+        for (var i = 0; i <= sideSize && !needStop; i += step) {
+            for (var j = 0; j <= sideSize && !needStop; j += step) {
+                if (i % squareSize + j % squareSize > 0) {
+                    map.put(i, j, new PolygonVector(i, interpolate(i, j), j));
+                } else {
+                    map.put(i, j, new PolygonVector(i, fastHeights[i / squareSize][j / squareSize], j));
+                }
+            }
+        }
+        return map;
+    }
+
+    private List<Polygon> generatePolygons(@NotNull Map2D<Integer, PolygonVector> heights) {
+        var polygons = new LinkedList<Polygon>();
+        for (var i = 0; i < sideSize && !needStop; i += step) {
+            var near = heights.get(i, 0);
+            var dx = heights.get(i + step, 0);
+            var dz = near;
+            var far = dx;
+            for (var j = 0; j < sideSize && !needStop; j += step) {
+                far = heights.get(i + step, j + step);
+                dz = heights.get(i, j + step);
                 var normal1 = Vector3D.getNormal(near, dx, far);
                 if (normal1.y < 0) {
                     normal1.inverse();
@@ -105,18 +111,58 @@ class Generator {
                 }
                 normal1.normalize();
                 normal2.normalize();
-                result.add(new Polygon(near, dx, far, normal1, new Color(0, 255, 0)));
-                result.add(new Polygon(near, dz, far, normal2, new Color(0, 255, 0)));
+                polygons.add(new Polygon(near, dx, far, normal1, new Color(0, 255, 0)));
+                polygons.add(new Polygon(near, dz, far, normal2, new Color(0, 255, 0)));
+                near = dz;
+                dx = far;
+            }
+        }
+        return polygons;
+    }
+
+    private double interpolate(int x, int y) {
+        var result = 0.0;
+        if (x % squareSize == 0 || y % squareSize == 0) {
+            result = fastHeights[x / squareSize][y / squareSize];
+        } else {
+            var matrix = copy(crigingMatrix);
+            var answer = new double[matrix.length];
+            var xi = 0;
+            var yi = 0;
+            for (var k = 0; k < matrix.length; ++k) {
+                answer[k] = covariation(xi, yi, x, y);
+                if (yi == sideSize) {
+                    yi = 0;
+                    xi += squareSize;
+                } else {
+                    yi += squareSize;
+                }
+            }
+            Gauss.solve(matrix, answer);
+            var i = 0;
+            var j = 0;
+            for (var k = 0; k < matrix.length; ++k) {
+                result += answer[k] * fastHeights[i][j];
+                ++j;
+                if (j == size) {
+                    j = 0;
+                    ++i;
+                }
             }
         }
         return result;
     }
 
-    public boolean isGenerates() {
-        return isGenerates;
+    private double covariation(int x0, int y0, int x1, int y1) {
+        var h2 = (x1 - x0) * (x1 - x0) + (y1 - y0) * (y1 - y0);
+        return 1 - Math.exp(-h2/radius2);
     }
 
-    public void setGenerates(boolean generates) {
-        isGenerates = generates;
+    private double[][] copy(double[][] matrix) {
+        var result = new double[matrix.length][matrix.length];
+        for (var i = 0; i < matrix.length; ++i) {
+            System.arraycopy(matrix[i], 0, result[i], 0, matrix.length);
+        }
+        return result;
     }
 }

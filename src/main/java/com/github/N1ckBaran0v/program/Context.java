@@ -1,6 +1,7 @@
 package com.github.N1ckBaran0v.program;
 
 import com.github.N1ckBaran0v.program.render.Render;
+import com.github.N1ckBaran0v.program.scene.Landscape;
 import com.github.N1ckBaran0v.program.scene.Scene;
 
 import javax.inject.Inject;
@@ -10,6 +11,7 @@ import javax.inject.Singleton;
 public class Context {
     private final Scene scene;
     private final Render render;
+    private final Landscape landscape = new Landscape();
 
     @Inject
     public Context(Scene scene, Render render) {
@@ -23,5 +25,9 @@ public class Context {
 
     public Render getArtist() {
         return render;
+    }
+
+    public Landscape getLandscape() {
+        return landscape;
     }
 }

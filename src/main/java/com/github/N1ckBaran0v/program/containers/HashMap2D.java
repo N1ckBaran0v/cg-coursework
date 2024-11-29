@@ -1,5 +1,7 @@
 package com.github.N1ckBaran0v.program.containers;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -17,7 +19,7 @@ public class HashMap2D<K, V> implements Map2D<K, V> {
     }
 
     @Override
-    public void put(K key1, K key2, V value) {
+    public void put(@NotNull K key1, @NotNull K key2, @NotNull V value) {
         if (inner.containsKey(key1)) {
             inner.get(key1).put(key2, value);
         } else {
@@ -28,18 +30,18 @@ public class HashMap2D<K, V> implements Map2D<K, V> {
     }
 
     @Override
-    public boolean contains(K key1, K key2) {
+    public boolean contains(@NotNull K key1, @NotNull K key2) {
         return inner.containsKey(key1) && inner.get(key1).containsKey(key2);
     }
 
     @Override
-    public V get(K key1, K key2) {
+    public V get(@NotNull K key1, @NotNull K key2) {
         var map = inner.get(key1);
         return map == null ? null : map.get(key2);
     }
 
     @Override
-    public void remove(K key1, K key2) {
+    public void remove(@NotNull K key1, @NotNull K key2) {
         inner.get(key1).remove(key2);
         if (inner.get(key1).isEmpty()) {
             inner.remove(key1);
@@ -56,7 +58,7 @@ public class HashMap2D<K, V> implements Map2D<K, V> {
     }
 
     @Override
-    public Iterator<Trio<K, V>> iterator() {
+    public @NotNull Iterator<Trio<K, V>> iterator() {
         return new HashMap2DIterator<>(inner);
     }
 }

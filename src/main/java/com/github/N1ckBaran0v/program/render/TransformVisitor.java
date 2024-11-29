@@ -1,10 +1,11 @@
 package com.github.N1ckBaran0v.program.render;
 
-import com.github.N1ckBaran0v.program.geometry.*;
+import com.github.N1ckBaran0v.program.math.*;
 import com.github.N1ckBaran0v.program.guiAdapters.AbstractImage;
 import com.github.N1ckBaran0v.program.scene.Camera;
 import com.github.N1ckBaran0v.program.scene.PolygonalModel;
 import com.github.N1ckBaran0v.program.scene.SceneObjectVisitor;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
@@ -16,7 +17,8 @@ class TransformVisitor implements SceneObjectVisitor {
     private final List<DrawVector> invalid = new ArrayList<>(3);
     private final List<DrawVector> maybeVisible = new ArrayList<>(4);
 
-    public TransformVisitor(Camera camera, DrawStrategyCreator drawStrategyCreator, AbstractImage image, Color color) {
+    public TransformVisitor(@NotNull Camera camera, @NotNull DrawStrategyCreator drawStrategyCreator,
+                            @NotNull AbstractImage image, @NotNull Color color) {
         center = camera.getCenter();
         focus = camera.getFocus();
         drawStrategy = drawStrategyCreator.create(image, color);
@@ -26,7 +28,7 @@ class TransformVisitor implements SceneObjectVisitor {
     }
 
     @Override
-    public void visit(PolygonalModel polygonalModel) {
+    public void visit(@NotNull PolygonalModel polygonalModel) {
         for (var polygon : polygonalModel) {
             drawPolygon(polygon);
         }

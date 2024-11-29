@@ -1,12 +1,13 @@
 package com.github.N1ckBaran0v.program.render;
 
-import com.github.N1ckBaran0v.program.geometry.Matrix4D;
+import com.github.N1ckBaran0v.program.math.Matrix4D;
 import com.github.N1ckBaran0v.program.guiAdapters.AbstractImage;
+import org.jetbrains.annotations.NotNull;
 
 class Frustum {
     private final Matrix4D transformMatrix = new Matrix4D();
 
-    public Frustum(AbstractImage image, double focus, double visibility) {
+    public Frustum(@NotNull AbstractImage image, double focus, double visibility) {
         var near = -focus;
         var far = focus + visibility;
         var width = image.getWidth();

@@ -3,43 +3,50 @@ package com.github.N1ckBaran0v.gui;
 import com.github.N1ckBaran0v.program.Facade;
 import com.github.N1ckBaran0v.program.GenerateLandscapeCommand;
 
-import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 class GenerateActionListener implements ActionListener {
-    private final List<JTextField> fields;
-    private final List<JLabel> labels;
-    private final Random gen = new Random();
-
-    public GenerateActionListener(List<JTextField> fields, List<JLabel> labels) {
-        this.fields = fields;
-        this.labels = labels;
-    }
+    private int sideSize, squareSize, step;
+    private List<List<Double>> heights;
 
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
-        try {
-            var seedText = fields.get(0).getText();
-            var seed = 0l;
-            if ("".equals(seedText)) {
-                seed = gen.nextLong();
-            } else {
-                seed = Long.parseLong(seedText);
-            }
-            var minHeight = Double.parseDouble(fields.get(1).getText());
-            var maxHeight = Double.parseDouble(fields.get(2).getText());
-            var sideSize = Long.parseLong(labels.get(0).getText());
-            var step = Long.parseLong(labels.get(1).getText());
-            var maxChunks = Long.parseLong(labels.get(2).getText());
-            Facade.execute(new GenerateLandscapeCommand(seed, minHeight, maxHeight, sideSize, step, maxChunks));
-        } catch (NumberFormatException exception) {
-            JOptionPane.showMessageDialog(null, "Ошибка при чтении данных", "Ошибка", JOptionPane.ERROR_MESSAGE);
-        } catch (IllegalArgumentException exception) {
-            JOptionPane.showMessageDialog(null, "Нижняя граница высоты не может быть выше верхней", "Ошибка",
-                    JOptionPane.ERROR_MESSAGE);
+        Facade.execute(new GenerateLandscapeCommand(heights, sideSize, squareSize, step));
+    }
+
+    public void setParams(int sideSize, int squareSize, int step, double defaultValue) {
+        if (sideSize == 0 || squareSize == 0 || step == 0 || sideSize % squareSize != 0 || squareSize % step != 0) {
+            throw new IllegalArgumentException();
         }
+        this.sideSize = sideSize;
+        this.squareSize = squareSize;
+        this.step = step;
+        var len = sideSize / squareSize + 1;
+        heights = new ArrayList<>(len);
+        for (var i = 0; i < len; ++i) {
+            heights.add(new ArrayList<>(len));
+            for (var j = 0; j < len; ++j) {
+                heights.get(i).add(defaultValue);
+            }
+        }
+    }
+
+    public double get(int x, int y) {
+        return heights.get(x / squareSize).get(y / squareSize);
+    }
+
+    public void set(int x, int y, double value) {
+        heights.get(x / squareSize).set(y / squareSize, value);
+    }
+
+    public int getSquareSize() {
+        return squareSize;
+    }
+
+    public int getSideSize() {
+        return sideSize;
     }
 }

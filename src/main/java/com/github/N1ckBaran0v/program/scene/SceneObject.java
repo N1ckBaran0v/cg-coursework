@@ -1,6 +1,7 @@
 package com.github.N1ckBaran0v.program.scene;
 
-import com.github.N1ckBaran0v.program.geometry.Vector3D;
+import com.github.N1ckBaran0v.program.math.Vector3D;
+import org.jetbrains.annotations.NotNull;
 
 import javax.naming.OperationNotSupportedException;
 
@@ -12,7 +13,7 @@ abstract public class SceneObject {
         this.center = new Vector3D();
     }
 
-    protected SceneObject(Vector3D center) {
+    protected SceneObject(@NotNull Vector3D center) {
         this.center = center;
     }
 
@@ -32,7 +33,7 @@ abstract public class SceneObject {
         return center;
     }
 
-    abstract public void accept(SceneObjectVisitor visitor);
+    abstract public void accept(@NotNull SceneObjectVisitor visitor);
 
     public boolean isNeedRecalculate() {
         return needRecalculate;

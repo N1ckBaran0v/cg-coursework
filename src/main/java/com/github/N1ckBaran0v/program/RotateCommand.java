@@ -1,5 +1,7 @@
 package com.github.N1ckBaran0v.program;
 
+import org.jetbrains.annotations.NotNull;
+
 public class RotateCommand implements Command {
     private final double ax, ay, az;
     private final String name;
@@ -12,7 +14,7 @@ public class RotateCommand implements Command {
     }
 
     @Override
-    public void execute(Context context) {
+    public void execute(@NotNull Context context) {
         var scene = context.getScene();
         var object = scene.getObject(name);
         object.rotate(ax, ay, az);

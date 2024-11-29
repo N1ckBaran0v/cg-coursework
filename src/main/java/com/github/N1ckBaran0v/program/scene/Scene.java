@@ -1,11 +1,13 @@
 package com.github.N1ckBaran0v.program.scene;
 
+import org.jetbrains.annotations.NotNull;
+
 public interface Scene extends Iterable<SceneObject> {
-    void addObject(String name, SceneObject sceneObject);
+    void addObject(@NotNull String name, @NotNull SceneObject sceneObject);
 
-    SceneObject createObject(String creatorName);
+    SceneObject createObject(@NotNull String creatorName);
 
-    SceneObject getObject(String name);
+    SceneObject getObject(@NotNull String name);
 
-    void removeObject(String name);
+    void removeObject(@NotNull String name);
 }

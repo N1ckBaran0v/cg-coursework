@@ -9,7 +9,7 @@ import javax.inject.Singleton;
 public interface RenderModule {
     @Binds
     @Singleton
-    Render bindArtist(RenderImplementation artistImplementation);
+    Render bindRender(RenderImplementation renderImplementation);
 
     @Binds
     DrawStrategyCreator bindDrawStrategyCreator(ZBufferStrategyCreator zBufferStrategyCreator);

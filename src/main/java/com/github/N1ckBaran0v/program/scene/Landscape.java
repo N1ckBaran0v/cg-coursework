@@ -1,76 +1,60 @@
 package com.github.N1ckBaran0v.program.scene;
 
-import com.github.N1ckBaran0v.program.containers.Map2D;
+import com.github.N1ckBaran0v.program.math.Polygon;
+import org.jetbrains.annotations.NotNull;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
-public class Landscape extends Composite {
-    private transient Map2D<Long, Chunk> chunks;
-    private long seed = 0;
-    private double minHeight = 0, maxHeight = 0;
-    private long sideSize = 1000, step = 100, maxChunks = 1;
+public class Landscape extends PolygonalModel implements Serializable {
+    private List<List<Double>> inputHeightsMap;
+    private int sideSize, squareSize, step;
+    private transient List<Polygon> polygons = new ArrayList<>();
 
     @Override
-    public Iterator<SceneObject> iterator() {
-        if (chunks == null) {
-            return new LandscapeIterator(null);
-        }
-        return new LandscapeIterator(chunks.iterator());
+    public @NotNull Iterator<Polygon> iterator() {
+        return polygons.iterator();
     }
 
-    public Map2D<Long, Chunk> getChunks() {
-        return chunks;
+    public @NotNull List<Polygon> getPolygons() {
+        return polygons;
     }
 
-    public void setChunks(Map2D<Long, Chunk> chunks) {
-        this.chunks = chunks;
+    public void setPolygons(@NotNull List<Polygon> polygons) {
+        this.polygons = polygons;
     }
 
-    public long getSeed() {
-        return seed;
-    }
-
-    public void setSeed(long seed) {
-        this.seed = seed;
-    }
-
-    public double getMinHeight() {
-        return minHeight;
-    }
-
-    public void setMinHeight(double minHeight) {
-        this.minHeight = minHeight;
-    }
-
-    public double getMaxHeight() {
-        return maxHeight;
-    }
-
-    public void setMaxHeight(double maxHeight) {
-        this.maxHeight = maxHeight;
-    }
-
-    public long getSideSize() {
-        return sideSize;
-    }
-
-    public void setSideSize(long sideSize) {
-        this.sideSize = sideSize;
-    }
-
-    public long getStep() {
+    public int getStep() {
         return step;
     }
 
-    public void setStep(long step) {
+    public void setStep(int step) {
         this.step = step;
     }
 
-    public long getMaxChunks() {
-        return maxChunks;
+    public int getSquareSize() {
+        return squareSize;
     }
 
-    public void setMaxChunks(long maxChunks) {
-        this.maxChunks = maxChunks;
+    public void setSquareSize(int squareSize) {
+        this.squareSize = squareSize;
+    }
+
+    public int getSideSize() {
+        return sideSize;
+    }
+
+    public void setSideSize(int sideSize) {
+        this.sideSize = sideSize;
+    }
+
+    public @NotNull List<List<Double>> getInputHeightsMap() {
+        return inputHeightsMap;
+    }
+
+    public void setInputHeightsMap(@NotNull List<List<Double>> inputHeightsMap) {
+        this.inputHeightsMap = inputHeightsMap;
     }
 }

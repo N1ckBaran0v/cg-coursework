@@ -1,8 +1,8 @@
 package com.github.N1ckBaran0v.program.render;
 
-import com.github.N1ckBaran0v.program.geometry.Color;
-import com.github.N1ckBaran0v.program.geometry.DrawVector;
+import com.github.N1ckBaran0v.program.math.DrawVector;
+import org.jetbrains.annotations.NotNull;
 
 public interface AbstractDrawStrategy {
-    void draw(DrawVector d1, DrawVector d2, DrawVector d3, Color color);
+    void draw(@NotNull DrawVector d1, @NotNull DrawVector d2, @NotNull DrawVector d3, @NotNull Color color);
 }

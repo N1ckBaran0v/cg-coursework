@@ -1,5 +1,7 @@
 package com.github.N1ckBaran0v.program.scene;
 
+import org.jetbrains.annotations.NotNull;
+
 import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -11,11 +13,10 @@ class SceneImplementation implements Scene {
 
     @Inject
     public SceneImplementation() {
-        addObject("Landscape", LandscapeHolder.getInstance());
     }
 
     @Override
-    public void addObject(String name, SceneObject sceneObject) {
+    public void addObject(@NotNull String name, @NotNull SceneObject sceneObject) {
         if (objects.containsKey(name)) {
             throw new RuntimeException("Key " + name + " already exists");
         }
@@ -23,18 +24,18 @@ class SceneImplementation implements Scene {
     }
 
     @Override
-    public SceneObject createObject(String creatorName) {
+    public SceneObject createObject(@NotNull String creatorName) {
         var creator = solution.getCreator(creatorName);
         return creator.create();
     }
 
     @Override
-    public SceneObject getObject(String name) {
+    public SceneObject getObject(@NotNull String name) {
         return objects.get(name);
     }
 
     @Override
-    public void removeObject(String name) {
+    public void removeObject(@NotNull String name) {
         objects.remove(name);
     }
 

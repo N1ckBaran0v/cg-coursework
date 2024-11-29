@@ -1,5 +1,7 @@
 package com.github.N1ckBaran0v.program;
 
+import org.jetbrains.annotations.NotNull;
+
 public class AddObjectCommand implements Command {
     private final String name;
     private final String type;
@@ -10,7 +12,7 @@ public class AddObjectCommand implements Command {
     }
 
     @Override
-    public void execute(Context context) {
+    public void execute(@NotNull Context context) {
         var scene = context.getScene();
         var object = scene.createObject(type);
         scene.addObject(name, object);
