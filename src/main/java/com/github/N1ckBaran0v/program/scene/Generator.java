@@ -64,6 +64,7 @@ public class Generator extends Thread {
     public void run() {
         synchronized (landscape) {
             needStop = false;
+            landscape.getPolygons().clear();
             var map = generateHeights();
             var polygons = generatePolygons(map);
             if (!needStop) {
@@ -81,11 +82,7 @@ public class Generator extends Thread {
         var map = new HashMap2D<Integer, PolygonVector>();
         for (var i = 0; i <= sideSize && !needStop; i += step) {
             for (var j = 0; j <= sideSize && !needStop; j += step) {
-                if (i % squareSize + j % squareSize > 0) {
-                    map.put(i, j, new PolygonVector(i, interpolate(i, j), j));
-                } else {
-                    map.put(i, j, new PolygonVector(i, fastHeights[i / squareSize][j / squareSize], j));
-                }
+                map.put(i, j, new PolygonVector(i, interpolate(i, j), j));
             }
         }
         return map;
@@ -122,7 +119,7 @@ public class Generator extends Thread {
 
     private double interpolate(int x, int y) {
         var result = 0.0;
-        if (x % squareSize == 0 || y % squareSize == 0) {
+        if (x % squareSize + y % squareSize == 0) {
             result = fastHeights[x / squareSize][y / squareSize];
         } else {
             var matrix = copy(crigingMatrix);
@@ -155,7 +152,7 @@ public class Generator extends Thread {
 
     private double covariation(int x0, int y0, int x1, int y1) {
         var h2 = (x1 - x0) * (x1 - x0) + (y1 - y0) * (y1 - y0);
-        return 1 - Math.exp(-h2/radius2);
+        return 1 - Math.exp(-Math.sqrt(h2/radius2));
     }
 
     private double[][] copy(double[][] matrix) {

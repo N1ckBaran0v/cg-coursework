@@ -6,7 +6,7 @@ import java.util.Objects;
 
 public class Vector3D {
     public double x, y, z;
-    private static final double EPS = 1e-7;
+    private static final double EPS = 5e-2;
 
     public Vector3D() {
     }
@@ -77,6 +77,6 @@ public class Vector3D {
 
     @Override
     public int hashCode() {
-        return Objects.hash(x, y, z);
+        return 0;
     }
 }

@@ -10,7 +10,7 @@
 
 В листингах~\ref{lst:cut1}-\ref{lst:cut3} представлена реализация алгоритма преобразования координат вершин ландшафта и отсечения перед отрисовкой.
 
-\begin{lstlisting}[label=lst:cut1,caption=Реализация алгоритма подготовки полигонов к отрисовке (часть~1)]
+\begin{lstlisting}[label=lst:cut1,caption=Реализация алгоритма подготовки полигонов к отрисовке (начало)]
 @Override
 public void visit(@NotNull PolygonalModel polygonalModel) {
 	for (var polygon : polygonalModel) {
@@ -36,7 +36,7 @@ private void drawPolygon(Polygon polygon) {
 			if (dot.w >= focus) {
 				maybeVisible.add(dot);
 \end{lstlisting}
-\begin{lstlisting}[label=lst:cut2,caption=Реализация алгоритма подготовки полигонов к отрисовке (часть~2)]
+\begin{lstlisting}[label=lst:cut2,caption=Реализация алгоритма подготовки полигонов к отрисовке (продолжение)]
 			} else {
 				invalid.add(dot);
 			}
@@ -75,7 +75,7 @@ private void triangulate(List<DrawVector> polygon, Color color) {
 	var second = polygon.get(1);
 	for (var i = 2; i < polygon.size(); ++i) {
 \end{lstlisting}
-\begin{lstlisting}[label=lst:cut3,caption=Реализация алгоритма подготовки полигонов к отрисовке (часть~3)]
+\begin{lstlisting}[label=lst:cut3,caption=Реализация алгоритма подготовки полигонов к отрисовке (окончание)]
 		var third = polygon.get(i);
 		drawStrategy.draw(first, second, third, color);
 		second = third;
@@ -85,7 +85,7 @@ private void triangulate(List<DrawVector> polygon, Color color) {
 
 В листингах~\ref{lst:z-buffer1}-\ref{lst:z-buffer2} представлена реализация алгоритма, использующего Z-буффер, и закраски Гуро.
 
-\begin{lstlisting}[label=lst:z-buffer1,caption=Реализация алгоритма отрисовки полигона (часть~1)]
+\begin{lstlisting}[label=lst:z-buffer1,caption=Реализация алгоритма отрисовки полигона (начало)]
 @Override
 public void draw(@NotNull DrawVector d1, @NotNull DrawVector d2, @NotNull DrawVector d3, @NotNull Color color) {
 	var x0 = Math.max(xMin, (int) Math.floor(Math.min(d1.x, Math.min(d2.x, d3.x))));
@@ -107,7 +107,7 @@ public void draw(@NotNull DrawVector d1, @NotNull DrawVector d2, @NotNull DrawVe
 					}
 \end{lstlisting}
 \clearpage
-\begin{lstlisting}[label=lst:z-buffer2,caption=Реализация алгоритма отрисовки полигона (часть~2)]
+\begin{lstlisting}[label=lst:z-buffer2,caption=Реализация алгоритма отрисовки полигона (окончание)]
 					var brightness = d1.brightness * k1 + d2.brightness * k2 + d3.brightness * k3;
 					color.setBrightness(brightness);
 					image.setPixel(x, y, color.getRGBWithBrightness());
@@ -121,7 +121,7 @@ public void draw(@NotNull DrawVector d1, @NotNull DrawVector d2, @NotNull DrawVe
 
 В листингах~\ref{lst:gen1}-\ref{lst:gen4} представлена реализация алгоритма генерации ландшафта с помощью кригинга.
 
-\begin{lstlisting}[label=lst:gen1,caption=Реализация алгоритма генерации ландшафта (часть~1)]
+\begin{lstlisting}[label=lst:gen1,caption=Реализация алгоритма генерации ландшафта (начало)]
 @Override
 public void run() {
 	synchronized (landscape) {
@@ -147,7 +147,7 @@ private Map2D<Integer, PolygonVector> generateHeights() {
 				map.put(i, j, new PolygonVector(i, interpolate(i, j), j));
 			} else {
 \end{lstlisting}
-\begin{lstlisting}[label=lst:gen2,caption=Реализация алгоритма генерации ландшафта (часть~2)]
+\begin{lstlisting}[label=lst:gen2,caption=Реализация алгоритма генерации ландшафта (продолжение)]
 				map.put(i, j, new PolygonVector(i, fastHeights[i / squareSize][j / squareSize], j));
 			}
 		}
@@ -185,7 +185,7 @@ private List<Polygon> generatePolygons(@NotNull Map2D<Integer, PolygonVector> he
 }
 \end{lstlisting}
 \clearpage
-\begin{lstlisting}[label=lst:gen3,caption=Реализация алгоритма генерации ландшафта (часть~3)]
+\begin{lstlisting}[label=lst:gen3,caption=Реализация алгоритма генерации ландшафта (продолжение)]
 private double interpolate(int x, int y) {
 	var result = 0.0;
 	if (x % squareSize == 0 || y % squareSize == 0) {
@@ -228,7 +228,7 @@ private double[][] copy(double[][] matrix) {
 	var result = new double[matrix.length][matrix.length];
 \end{lstlisting}
 
-\begin{lstlisting}[label=lst:gen4,caption=Реализация алгоритма генерации ландшафта (часть~4)]
+\begin{lstlisting}[label=lst:gen4,caption=Реализация алгоритма генерации ландшафта (окончание)]
 		for (var i = 0; i < matrix.length; ++i) {
 		System.arraycopy(matrix[i], 0, result[i], 0, matrix.length);
 	}
@@ -250,6 +250,8 @@ private double[][] copy(double[][] matrix) {
 \FloatBarrier
 
 \section{Тестирование}
+
+\subsection{Модульное тестирование}
 
 Было реализовано модульное тестирование с помощью фреймворка JUnit5. В качестве меры, используемой при тестировании программы, было выбрано покрытие кода, подсчёт которого производился автоматически средствами среды разработки IntelliJ Idea. Процент покрытия кода составил 18\%.
 
@@ -289,6 +291,74 @@ Test negativeSideSize() PASSED
 SUCCESS: Executed 9 tests in 1s
 
 \end{lstlisting}
+
+\subsection{Функциональное тестирование}
+
+Этапы функционального тестирования:
+
+\begin{enumerate}[label=\arabic*.]
+	\item Определение классов эквивалентности функционального тестирования.
+	\item Составление входных данных для каждого класса эквивалентности.
+	\item Генерация ландшафта и получение изображения для каждого тестового случая.
+	\item Визуальная оценка результата.
+\end{enumerate}
+
+Классы эквивалентности функционального тестирования:
+
+\begin{enumerate}[label=\arabic*.]
+	\item Все значения высот равны 0.
+	\item Значения высот сгенерированы с использованием шума Перлина.
+	\item <<Квадратный>> холм.
+	\item <<Круглый>> холм.
+	\item На главных диагоналях значения высот равны 1000, в остальных вершинах -- 0.
+\end{enumerate}
+
+Примеры работы программы для каждого из тестовых случаев представлены на рисунках~\ref{img:test1}-\ref{img:test5}.
+
+\FloatBarrier
+\includeimage
+{test1} % Имя файла без расширения (файл должен быть расположен в директории inc/img/)
+{f} % Обтекание (без обтекания)
+{h} % Положение рисунка (см. figure из пакета float)
+{1\textwidth} % Ширина рисунка
+{Пример работы программы для теста 1} % Подпись рисунка
+\FloatBarrier
+
+\FloatBarrier
+\includeimage
+{test2} % Имя файла без расширения (файл должен быть расположен в директории inc/img/)
+{f} % Обтекание (без обтекания)
+{h} % Положение рисунка (см. figure из пакета float)
+{1\textwidth} % Ширина рисунка
+{Пример работы программы для теста 2} % Подпись рисунка
+\FloatBarrier
+
+\FloatBarrier
+\includeimage
+{test3} % Имя файла без расширения (файл должен быть расположен в директории inc/img/)
+{f} % Обтекание (без обтекания)
+{h} % Положение рисунка (см. figure из пакета float)
+{1\textwidth} % Ширина рисунка
+{Пример работы программы для теста 3} % Подпись рисунка
+\FloatBarrier
+
+\FloatBarrier
+\includeimage
+{test4} % Имя файла без расширения (файл должен быть расположен в директории inc/img/)
+{f} % Обтекание (без обтекания)
+{h} % Положение рисунка (см. figure из пакета float)
+{1\textwidth} % Ширина рисунка
+{Пример работы программы для теста 4} % Подпись рисунка
+\FloatBarrier
+
+\FloatBarrier
+\includeimage
+{test5} % Имя файла без расширения (файл должен быть расположен в директории inc/img/)
+{f} % Обтекание (без обтекания)
+{h!} % Положение рисунка (см. figure из пакета float)
+{1\textwidth} % Ширина рисунка
+{Пример работы программы для теста 5} % Подпись рисунка
+\FloatBarrier
 
 \usection{Выводы}
 

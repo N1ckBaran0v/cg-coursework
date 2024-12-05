@@ -14,8 +14,8 @@ class CameraKeyListener implements KeyListener {
     public void keyTyped(KeyEvent keyEvent) {
         switch (keyEvent.getKeyChar()) {
             case 'w', 'ц', 'W', 'Ц' -> mover.setGoForward(true);
-            case 's', 'ы', 'A', 'Ы' -> mover.setGoBack(true);
-            case 'a', 'ф', 'S', 'Ф' -> mover.setGoLeft(true);
+            case 's', 'ы', 'S', 'Ы' -> mover.setGoBack(true);
+            case 'a', 'ф', 'A', 'Ф' -> mover.setGoLeft(true);
             case 'd', 'в', 'D', 'В' -> mover.setGoRight(true);
         }
     }

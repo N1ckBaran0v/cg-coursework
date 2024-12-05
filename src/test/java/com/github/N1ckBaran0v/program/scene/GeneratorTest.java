@@ -101,7 +101,7 @@ class GeneratorTest {
             }
             for (var polygon : landscape) {
                 for (var dot : polygon) {
-                    assertTrue((int) dot.realDot.x % step == 0 && (int) dot.realDot.z % step == 0);
+                    assertTrue(result.contains(dot.realDot));
                 }
             }
         } catch (IllegalArgumentException | InterruptedException e) {
