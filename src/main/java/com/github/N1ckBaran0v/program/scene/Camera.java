@@ -8,7 +8,7 @@ public class Camera extends SceneObject {
     private final Vector3D vx = new Vector3D(1, 0, 0);
     private final Vector3D vy = new Vector3D(0, 1, 0);
     private final Vector3D vz = new Vector3D(0, 0, 1);
-    private double focus = 512, visibility = 16384;
+    private double focus = 1024, visibility = 65536;
     private static final double MAX_ANGLE = 90;
     private static final double CIRCLE = 360;
     private double angleY, angleZ;
