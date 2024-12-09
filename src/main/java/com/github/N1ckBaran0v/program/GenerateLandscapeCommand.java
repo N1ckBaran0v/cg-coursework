@@ -3,6 +3,7 @@ package com.github.N1ckBaran0v.program;
 import com.github.N1ckBaran0v.program.scene.Generator;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GenerateLandscapeCommand implements Command {
@@ -10,7 +11,10 @@ public class GenerateLandscapeCommand implements Command {
     private final int sideSize, squareSize, step;
 
     public GenerateLandscapeCommand(@NotNull List<List<Double>> heights, int sideSize, int squareSize, int step) {
-        this.heights = heights;
+        this.heights = new ArrayList<>(heights.size());
+        for (var arr : heights) {
+            this.heights.add(new ArrayList<>(arr));
+        }
         this.sideSize = sideSize;
         this.squareSize = squareSize;
         this.step = step;
