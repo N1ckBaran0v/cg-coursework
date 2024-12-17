@@ -6,7 +6,6 @@ GRADLE := gradle/wrapper/gradle-wrapper.jar
 
 # Build app
 build: $(GRADLE)
-	mkdir -p ready
 	./gradlew shadowJar --no-daemon
 
 # Test app
